@@ -1,0 +1,23 @@
+package(default_visibility = ["//visibility:public"])
+
+constraint_setting(name = "board")
+
+board_packages = [
+    "@stm32//boards/{}".format(brd)
+    for brd in subpackages(include = ["*"])
+]
+
+filegroup(
+    name = "memory_region",
+    srcs = select(
+        dict(
+            [
+                (
+                    bp,
+                    ["{}:memory_region".format(bp)],
+                )
+                for bp in board_packages
+            ],
+        ),
+    ),
+)
