@@ -1,14 +1,6 @@
 load("@stm32//:rules.bzl", "stm32_binary")
 
-# TODO write a better startup script
 stm32_binary(
     name = "minimal",
-    srcs = [
-        "main.cpp",
-        "startup_ARMCM3.S",
-    ],
-    defines = [
-        "__NO_SYSTEM_INIT",
-        "__START=main",
-    ],
+    srcs = ["main.cpp"],
 )

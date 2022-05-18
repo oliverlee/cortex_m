@@ -2,6 +2,10 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 def stm32_binary(
         name,
+        semihosting = False,
+        startup_srcs = [],
+        srcs = [],
+        deps = [],
         linker_scripts = [],
         linkopts = [],
         additional_linker_inputs = [],
@@ -12,8 +16,13 @@ def stm32_binary(
         "@arm_none_eabi//share:gcc_arm_linker_script",
     ]
 
+    if not startup_srcs:
+        deps = deps + ["@stm32//src/startup{}".format(":semihosting" if semihosting else "")]
+
     cc_binary(
         name = name,
+        srcs = srcs + startup_srcs,
+        deps = deps,
         linkopts = linkopts + [
             "-T$(rootpath {})".format(ls)
             for ls in linker_scripts
