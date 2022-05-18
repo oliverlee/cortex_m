@@ -3,4 +3,5 @@ load("@stm32//:rules.bzl", "stm32_binary")
 stm32_binary(
     name = "minimal",
     srcs = ["main.cpp"],
+    copts = ["-Wno-unused-variable"],
 )
