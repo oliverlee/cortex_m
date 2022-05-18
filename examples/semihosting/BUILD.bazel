@@ -2,7 +2,7 @@ load("@stm32//:rules.bzl", "stm32_binary")
 
 # TODO write a better startup script
 stm32_binary(
-    name = "main",
+    name = "semihosting",
     srcs = [
         "main.cpp",
         "startup_ARMCM3.S",
@@ -10,5 +10,8 @@ stm32_binary(
     defines = [
         "__NO_SYSTEM_INIT",
         "__START=main",
+    ],
+    deps = [
+        "@arm_none_eabi//libs:semihosting",
     ],
 )
