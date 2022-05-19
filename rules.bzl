@@ -34,3 +34,11 @@ def stm32_binary(
         ],
         **kwargs
     )
+
+    native.genrule(
+        name = name + "_map",
+        srcs = [name],
+        outs = [name + ".map"],
+        tools = ["@arm_none_eabi//:objdump"],
+        cmd = "$(location @arm_none_eabi//:objdump) -C --all-headers $< > $@",
+    )
