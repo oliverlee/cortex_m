@@ -1,0 +1,14 @@
+load("@stm32//tools/qemu:defs.bzl", "qemu_wrapper")
+
+package(default_visibility = ["//visibility:public"])
+
+qemu_wrapper(
+    name = "qemu",
+)
+
+qemu_wrapper(
+    name = "semihosting",
+    args = [
+        "-semihosting",
+    ],
+)

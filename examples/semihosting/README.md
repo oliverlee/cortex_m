@@ -5,11 +5,10 @@ bazel build //examples/semihosting \
   --platforms=@stm32//platforms:lm3s6965evb
 ```
 
-Run
+Run under qemu (installed on the host)
 
 ```sh
-qemu-system-arm \
-  -machine lm3s6965evb \
-  -semihosting \
-  -device loader,file=bazel-bin/examples/semihosting/semihosting
+bazel run //examples/semihosting \
+ --platforms=@stm32//platforms:lm3s6965evb \
+ --run_under=//tools/qemu:semihosting
 ```

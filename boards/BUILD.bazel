@@ -10,14 +10,26 @@ board_packages = [
 filegroup(
     name = "memory_region",
     srcs = select(
-        dict(
-            [
-                (
-                    bp,
-                    ["{}:memory_region".format(bp)],
-                )
-                for bp in board_packages
-            ],
-        ),
+        {
+            bp: ["{}:memory_region".format(bp)]
+            for bp in board_packages
+        },
+        no_match_error = """Unable to determine board memory region.
+
+Try selecting a valid platform or avoiding this filegroup by
+manually specifying linker files.
+
+Conditions checked:
+  {}""".format("\n  ".join(board_packages)),
+    ),
+)
+
+filegroup(
+    name = "maybe_memory_region",
+    srcs = select(
+        {
+            bp: ["{}:memory_region".format(bp)]
+            for bp in board_packages
+        } | {"//conditions:default": []},
     ),
 )
