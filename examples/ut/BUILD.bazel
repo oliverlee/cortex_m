@@ -1,0 +1,8 @@
+load("@stm32//:rules.bzl", "stm32_binary")
+
+stm32_binary(
+    name = "ut",
+    srcs = ["main.cpp"],
+    semihosting = True,
+    deps = ["@ut"],
+)

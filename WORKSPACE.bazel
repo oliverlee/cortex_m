@@ -56,3 +56,20 @@ cc_library(
     sha256 = "09b9759c9349b54d96f11dc64c35b721a557705629cd8f77fad62e5f10fe934e",
     user = "fmtlib",
 )
+
+github_archive(
+    name = "ut",
+    build_file_content = """
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "ut",
+    hdrs = ["include/boost/ut.hpp"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
+""",
+    commit = "6e24d43a8c20fa674530f43d3e468e05af4bf03e",
+    sha256 = "867d37d9540fcb7fc41322b4f0f498bff7f32962d3ad5bd030a4f4da28b151f9",
+    user = "boost-ext",
+)
