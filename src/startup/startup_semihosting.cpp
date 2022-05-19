@@ -1,5 +1,4 @@
 #include "arm/semihosting.hpp"
-#include <cstdio>
 
 extern "C" {
 

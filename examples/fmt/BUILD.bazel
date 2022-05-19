@@ -3,6 +3,6 @@ load("@stm32//:rules.bzl", "stm32_binary")
 stm32_binary(
     name = "fmt",
     srcs = ["main.cpp"],
-    semihosting = True,
+    startup = "semihosting",
     deps = ["@fmt"],
 )

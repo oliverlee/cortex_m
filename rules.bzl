@@ -1,10 +1,39 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
+def stm32_qemu_test(
+        name,
+        deps = [],
+        **kwargs):
+    native.sh_test(
+        name = name,
+        srcs = ["test_{}.sh".format(name)],
+        data = [
+            "@stm32//tools/qemu:semihosting",
+            ":test_{}".format(name),
+        ],
+    )
+
+    native.genrule(
+        name = "gentest_{}".format(name),
+        outs = ["test_{}.sh".format(name)],
+        srcs = [
+            "@stm32//tools/qemu:semihosting",
+            ":test_{}".format(name),
+        ],
+        cmd = ("echo $(rootpath @stm32//tools/qemu:semihosting) " +
+               "$(rootpath :test_{}) > $@".format(name)),
+    )
+
+    stm32_binary(
+        name = "test_{}".format(name),
+        startup = "semihosting",
+        deps = deps + ["@ut"],
+        **kwargs
+    )
+
 def stm32_binary(
         name,
-        semihosting = False,
-        startup_srcs = [],
-        srcs = [],
+        startup = "startup",
         deps = [],
         linker_scripts = [],
         linkopts = [],
@@ -16,8 +45,8 @@ def stm32_binary(
         "@arm_none_eabi//share:gcc_arm_linker_script",
     ]
 
-    if not startup_srcs:
-        deps = deps + ["@stm32//src/startup{}".format(":semihosting" if semihosting else "")]
+    if startup:
+        deps = deps + ["@stm32//src/startup:{}".format(startup)]
 
     native.alias(
         name = name,
@@ -26,7 +55,6 @@ def stm32_binary(
 
     cc_binary(
         name = "{}.elf".format(name),
-        srcs = srcs + startup_srcs,
         deps = deps,
         linkopts = linkopts + [
             "-T$(rootpath {})".format(ls)

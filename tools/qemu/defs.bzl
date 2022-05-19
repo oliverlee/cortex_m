@@ -1,6 +1,5 @@
 def _qemu_wrapper_impl(ctx):
-    contents = """
-#!/bin/bash
+    contents = """#!/bin/bash
 set -euo pipefail
 
 bin=qemu-system-arm

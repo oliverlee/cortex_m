@@ -1,2 +1,4 @@
 build --incompatible_enable_cc_toolchain_resolution
+test --test_output=errors
+test --test_summary=detailed
 
