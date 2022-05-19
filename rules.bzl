@@ -19,13 +19,22 @@ def stm32_binary(
     if not startup_srcs:
         deps = deps + ["@stm32//src/startup{}".format(":semihosting" if semihosting else "")]
 
-    cc_binary(
+    native.alias(
         name = name,
+        actual = ":{}.elf".format(name),
+    )
+
+    cc_binary(
+        name = "{}.elf".format(name),
         srcs = srcs + startup_srcs,
         deps = deps,
         linkopts = linkopts + [
             "-T$(rootpath {})".format(ls)
             for ls in linker_scripts
+        ] + [
+            "-Wl,-Map={}.map,--cref".format(
+                name,
+            ),
         ],
         additional_linker_inputs = additional_linker_inputs + linker_scripts,
         target_compatible_with = target_compatible_with + [
@@ -36,9 +45,17 @@ def stm32_binary(
     )
 
     native.genrule(
-        name = name + "_map",
-        srcs = [name],
-        outs = [name + ".map"],
+        name = "{}_lss".format(name),
+        srcs = ["{}.elf".format(name)],
+        outs = ["{}.lss".format(name)],
         tools = ["@arm_none_eabi//:objdump"],
-        cmd = "$(location @arm_none_eabi//:objdump) -C --all-headers $< > $@",
+        cmd = "$(execpath @arm_none_eabi//:objdump) --source --line-numbers --demangle $< > $@",
+    )
+
+    native.genrule(
+        name = "{}_dmp".format(name),
+        srcs = ["{}.elf".format(name)],
+        outs = ["{}.dmp".format(name)],
+        tools = ["@arm_none_eabi//:objdump"],
+        cmd = "$(execpath @arm_none_eabi//:objdump) --all-headers --syms --demangle $< > $@",
     )
