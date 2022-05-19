@@ -27,7 +27,7 @@ def stm32_qemu_test(
     stm32_binary(
         name = "test_{}".format(name),
         startup = "semihosting",
-        deps = deps + ["@ut"],
+        deps = deps + ["@ut", "@stm32//src/test:cfg"],
         **kwargs
     )
 
