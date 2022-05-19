@@ -27,7 +27,9 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
-http_archive(
+load("@stm32//:defs.bzl", "github_archive")
+
+github_archive(
     name = "fmt",
     build_file_content = """
 load("@rules_cc//cc:defs.bzl", "cc_library")
@@ -50,7 +52,7 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 """,
+    commit = "147e8ca58076e94cd86430328f6b8b3f844b4439",
     sha256 = "09b9759c9349b54d96f11dc64c35b721a557705629cd8f77fad62e5f10fe934e",
-    strip_prefix = "fmt-147e8ca58076e94cd86430328f6b8b3f844b4439",
-    url = "https://github.com/fmtlib/fmt/archive/147e8ca58076e94cd86430328f6b8b3f844b4439.tar.gz",
+    user = "fmtlib",
 )
