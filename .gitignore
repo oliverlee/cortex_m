@@ -2,5 +2,4 @@
 /bazel-*
 
 # ignore user local bazelrc
-/.bazelrc.user
-
+/user.bazelrc

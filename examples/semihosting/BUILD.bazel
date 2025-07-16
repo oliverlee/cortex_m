@@ -1,8 +1,0 @@
-load("@stm32//:rules.bzl", "stm32_binary")
-
-# TODO write a better startup script
-stm32_binary(
-    name = "semihosting",
-    srcs = ["main.cpp"],
-    semihosting = True,
-)

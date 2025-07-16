@@ -1,32 +1,32 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
-
-# TODO write a better startup script
-
-cc_library(
-    name = "startup",
-    srcs = [
-        "startup.cpp",
-        "startup_ARMCM3.S",
-    ],
-    linkstatic = True,
-    local_defines = [
-        "__NO_SYSTEM_INIT",
-        "__START=start",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "semihosting",
-    srcs = [
-        "startup_ARMCM3.S",
-        "startup_semihosting.cpp",
-    ],
-    linkstatic = True,
-    local_defines = [
-        "__NO_SYSTEM_INIT",
-        "__START=start",
-    ],
-    visibility = ["//visibility:public"],
-    deps = ["@arm_none_eabi//libs:semihosting"],
-)
+#load("@rules_cc//cc:defs.bzl", "cc_library")
+#
+## TODO write a better startup script
+#
+#cc_library(
+#    name = "startup",
+#    srcs = [
+#        "startup.cpp",
+#        "startup_ARMCM3.S",
+#    ],
+#    linkstatic = True,
+#    local_defines = [
+#        "__NO_SYSTEM_INIT",
+#        "__START=start",
+#    ],
+#    visibility = ["//visibility:public"],
+#)
+#
+#cc_library(
+#    name = "semihosting",
+#    srcs = [
+#        "startup_ARMCM3.S",
+#        "startup_semihosting.cpp",
+#    ],
+#    linkstatic = True,
+#    local_defines = [
+#        "__NO_SYSTEM_INIT",
+#        "__START=start",
+#    ],
+#    visibility = ["//visibility:public"],
+#    deps = ["@arm_none_eabi//libs:semihosting"],
+#)
