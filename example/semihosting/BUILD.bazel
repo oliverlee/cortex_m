@@ -1,8 +1,7 @@
-#load("@stm32//:rules.bzl", "stm32_binary")
-#
-## TODO write a better startup script
-#stm32_binary(
-#    name = "semihosting",
-#    srcs = ["main.cpp"],
-#    semihosting = True,
-#)
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "semihosting",
+    srcs = ["main.cpp"],
+    tags = ["manual"],
+)
