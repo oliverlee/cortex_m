@@ -10,6 +10,18 @@ common --ui_actions_shown=20
 common --progress_in_terminal_title
 common --enable_platform_specific_config
 
+common:remote-cache --bes_results_url=https://oliverlee.buildbuddy.io/invocation/
+common:remote-cache --bes_backend=grpcs://oliverlee.buildbuddy.io
+common:remote-cache --remote_cache=grpcs://oliverlee.buildbuddy.io
+common:remote-cache --remote_timeout=10m
+common:remote-cache --remote_build_event_upload=minimal
+common:remote-cache --remote_download_outputs=minimal
+common:remote-cache --remote_cache_compression
+common:remote-cache --slim_profile=false
+common:remote-cache --experimental_profile_include_primary_output
+common:remote-cache --experimental_profile_include_target_label
+common:remote-cache --legacy_important_outputs=false
+
 build --@bazel_clang_format//:binary=@llvm_toolchain//:clang-format
 build --@bazel_clang_format//:config=//:format-config
 
