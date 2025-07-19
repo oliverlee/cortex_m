@@ -1,7 +1,14 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("//rules:transitions.bzl", "transition_semihosting_binary")
 
 cc_binary(
-    name = "semihosting",
+    name = "example",
     srcs = ["main.cpp"],
     tags = ["manual"],
+)
+
+transition_semihosting_binary(
+    name = "semihosting",
+    src = ":example",
+    semihosting = "enabled",
 )
