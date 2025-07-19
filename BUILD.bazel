@@ -1,5 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
 
+xcode_config(name = "host_xcodes")
+
 filegroup(
     name = "format-config",
     srcs = [".clang-format"],
