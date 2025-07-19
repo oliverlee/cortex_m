@@ -1,14 +1,10 @@
-#load("@stm32//tools/qemu:defs.bzl", "qemu_wrapper")
-#
-#package(default_visibility = ["//visibility:public"])
-#
-#qemu_wrapper(
-#    name = "qemu",
-#)
-#
-#qemu_wrapper(
-#    name = "semihosting",
-#    args = [
-#        "-semihosting",
-#    ],
-#)
+load("//board:defs.bzl", "BOARDS")
+load("//rules:qemu_runner.bzl", "qemu_runner")
+
+[
+    qemu_runner(
+        name = "{}_runner".format(board.name),
+        machine = board.name,
+    )
+    for board in BOARDS
+]

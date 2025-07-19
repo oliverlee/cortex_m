@@ -13,10 +13,12 @@ gdb is not yet connected to anything.
 In another terminal, run the target with qemu:
 
 ```sh
-qemu-system-arm \
-  -machine lm3s6965evb \
-  -s -S \
-  -device loader,file=bazel-bin/examples/minimal/minimal
+ bazel run \
+    --platforms=//platform:lm3s6965evb \
+    --run_under=//tools/qemu:lm3s6965evb_runner \
+    -c dbg \
+    //example/minimal -- \
+    -S
 ```
 
 Connect with gdb:
