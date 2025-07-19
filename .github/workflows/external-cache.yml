@@ -51,9 +51,12 @@ jobs:
       run: |
         ls -al ~/bazel_external_deps/
         du -sh ~/bazel_external_deps/
+        ls -al /nix/store
+        du -sh /nix/store
     - name: save to actions/cache
       uses: actions/cache/save@v4
       with:
         path: |
           ~/bazel_external_deps
+          /nix/store
         key: bazel-external-cache-${{ runner.os }}-${{ matrix.config }}
