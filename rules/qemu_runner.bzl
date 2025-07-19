@@ -13,6 +13,20 @@ def _impl(ctx):
         fixed_args.append("-gdb " + ctx.attr.gdb)
     fixed_args.extend(ctx.attr.extra_args)
 
+    runfiles_init = """
+# --- begin runfiles.bash initialization v3 ---
+# Copy-pasted from the Bazel Bash runfiles library v3.
+set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
+# shellcheck disable=SC1090
+source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$0.runfiles/$f" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+  { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
+# --- end runfiles.bash initialization v3 ---
+"""
+
     ctx.actions.write(
         output = out,
         content = """
@@ -35,9 +49,11 @@ if (($# == 0)); then
     exit 1
 fi
 
+{runfiles_init}
+
 binary="$1"
 
-exec qemu-system-arm \
+exec $(rlocation {qemu_system_arm}) \
     {fixed_args} \
     -device loader,file="$binary" \
     "${{@:2}}"
@@ -45,11 +61,21 @@ exec qemu-system-arm \
             fixed_args = " ".join(fixed_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
             machine = ctx.attr.machine,
+            runfiles_init = runfiles_init,
+            qemu_system_arm = "qemu-system-arm/qemu-system-arm",
         ),
         is_executable = True,
     )
 
-    return [DefaultInfo(executable = out)]
+    return [
+        DefaultInfo(
+            executable = out,
+            runfiles = ctx.runfiles(
+                files = [ctx.executable._qemu_system_arm],
+                transitive_files = ctx.attr._runfiles.files,
+            ),
+        ),
+    ]
 
 qemu_runner = rule(
     implementation = _impl,
@@ -65,7 +91,14 @@ qemu_runner = rule(
         "extra_args": attr.string_list(
             doc = "Extra arguments to pass to QEMU",
         ),
-        # TODO remove dependency on system installed qemu-system-arm
+        "_qemu_system_arm": attr.label(
+            default = "@qemu-system-arm",
+            executable = True,
+            cfg = "exec",
+        ),
+        "_runfiles": attr.label(
+            default = "@bazel_tools//tools/bash/runfiles",
+        ),
     },
     executable = True,
 )

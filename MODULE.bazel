@@ -47,6 +47,16 @@ bazel_dep(
     name = "hedron_compile_commands",
     dev_dependency = True,
 )
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.7.1",
+    dev_dependency = True,
+)
+bazel_dep(
+    name = "rules_nixpkgs_core",
+    version = "0.13.0",
+    dev_dependency = True,
+)
 
 TOOLCHAINS_LLVM_COMMIT = "f1048a300d0be607c7f5092e323bc15b7ef8d8af"
 
@@ -122,6 +132,12 @@ use_repo(arm_toolchain, "arm_none_eabi")
 register_toolchains(
     "//toolchain:all",
     dev_dependency = True,
+)
+
+flake_package_deps = use_extension("//:extensions.bzl", "flake_package_deps")
+use_repo(
+    flake_package_deps,
+    "qemu-system-arm",
 )
 
 HEDRON_COMPILE_COMMANDS_COMMIT = "4f28899228fb3ad0126897876f147ca15026151e"
