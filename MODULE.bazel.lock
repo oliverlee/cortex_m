@@ -282,7 +282,7 @@
   "moduleExtensions": {
     "//:extensions.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "wtYg0JE5XNND/QiFA6JiBoDhOuCp/IzDDFM0mRugTcA=",
+        "bzlTransitiveDigest": "jvwW6yHawlv2rrI9JzoDfak/3WcFYL7/JAgG/9TleU0=",
         "usagesDigest": "vX014rS+yEZDrZ9WDxskY2ZZ/4Aace8GD0u9XC7muEY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

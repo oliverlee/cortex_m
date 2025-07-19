@@ -4,6 +4,10 @@ load("//rules:qemu_runner.bzl", "qemu_runner")
 [
     qemu_runner(
         name = "{}_runner".format(board.name),
+        extra_args = select({
+            "//toolchain:semihosting_disabled": [],
+            "//toolchain:semihosting_enabled": ["-semihosting"],
+        }),
         machine = board.name,
     )
     for board in BOARDS

@@ -1,6 +1,7 @@
 #include <cstdio>
 
-int main() {
-    printf("hello world!\n");
-    return 0;
+auto main() -> int
+{
+   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+  ::printf("hello world!\n");
 }

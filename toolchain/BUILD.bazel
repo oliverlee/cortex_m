@@ -1,6 +1,26 @@
 load("@arm_none_eabi//toolchain:toolchain.bzl", "arm_none_eabi_toolchain")
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("//board:defs.bzl", "BOARDS")
+
+bool_flag(
+    name = "semihosting",
+    build_setting_default = False,
+)
+
+config_setting(
+    name = "semihosting_enabled",
+    flag_values = {
+        ":semihosting": "True",
+    },
+)
+
+config_setting(
+    name = "semihosting_disabled",
+    flag_values = {
+        ":semihosting": "False",
+    },
+)
 
 [
     (
@@ -8,9 +28,11 @@ load("//board:defs.bzl", "BOARDS")
             name = "start_{board}".format(board = board.name),
             srcs = [
                 # TODO write a better startup file
-                "startup.cpp",
                 "startup_ARMCM3.S",
-            ],
+            ] + select({
+                ":semihosting_disabled": ["startup.cpp"],
+                ":semihosting_enabled": [],
+            }),
             additional_linker_inputs = [
                 "//board/{board}:memory_region".format(board = board.name),
                 "link.x",
@@ -18,7 +40,10 @@ load("//board:defs.bzl", "BOARDS")
             linkopts = [
                 "-T $(location //board/{board}:memory_region)".format(board = board.name),
                 "-T $(location :link.x)",
-            ],
+            ] + select({
+                ":semihosting_disabled": ["-nostartfiles"],
+                ":semihosting_enabled": ["-specs=rdimon.specs"],
+            }),
             local_defines = ["__NO_SYSTEM_INIT"],
             target_compatible_with = [
                 "@platforms//os:none",
@@ -36,6 +61,7 @@ load("//board:defs.bzl", "BOARDS")
                 "-mcpu={cpu}".format(cpu = board.cpu),
                 "-mthumb",
                 "-mfloat-abi=soft",
+                "-fdiagnostics-color",
                 "-specs=nano.specs",
                 "-Werror",
                 "-Wall",
@@ -64,7 +90,6 @@ load("//board:defs.bzl", "BOARDS")
                 "-mthumb",
                 "-mfloat-abi=soft",
                 "-specs=nano.specs",
-                "-nostartfiles",
                 "-Wl,--gc-sections",
                 "-Wl,--fatal-warnings",
             ],
