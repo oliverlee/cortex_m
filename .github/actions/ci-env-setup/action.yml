@@ -35,4 +35,5 @@ runs:
       with:
         path: |
           ~/bazel_external_deps
+          /nix/store
         key: bazel-external-cache-${{ inputs.external-cache-key }}
