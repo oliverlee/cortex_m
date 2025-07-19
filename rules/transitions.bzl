@@ -33,22 +33,10 @@ def _transition_semihosting_binary_impl(ctx):
         target_file = binary,
     )
 
-    env = {
-        "QEMU_SEMIHOSTING": str(int(ctx.attr.semihosting == "enabled")),
-    }
-    inherit_env = []
-    if RunEnvironmentInfo in target:
-        env = target[RunEnvironmentInfo].environment | env
-        inherit_env = target[RunEnvironmentInfo].inherited_environment
-
     return [
         DefaultInfo(
             executable = out,
             runfiles = runfiles,
-        ),
-        RunEnvironmentInfo(
-            environment = env,
-            inherited_environment = inherit_env,
         ),
     ] + [
         target[provider]
@@ -57,6 +45,7 @@ def _transition_semihosting_binary_impl(ctx):
             DebugPackageInfo,
             OutputGroupInfo,
             InstrumentedFilesInfo,
+            RunEnvironmentInfo,
         ]
         if provider in target
     ]

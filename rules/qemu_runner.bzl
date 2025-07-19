@@ -2,6 +2,8 @@
 run QEMU for a specific machine
 """
 
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
+
 _runfiles_init = """
 # --- begin runfiles.bash initialization v3 ---
 # Copy-pasted from the Bazel Bash runfiles library v3.
@@ -25,6 +27,8 @@ def _impl(ctx):
     ]
     if ctx.attr.gdb:
         fixed_args.append("-gdb " + ctx.attr.gdb)
+    if ctx.attr._semihosting[BuildSettingInfo]:
+        fixed_args.append("-semihosting")
     fixed_args.extend(ctx.attr.extra_args)
 
     ctx.actions.write(
@@ -54,7 +58,6 @@ fi
 binary="$1"
 
 args=({fixed_args} "-device" "loader,file=$binary")
-(("${{QEMU_SEMIHOSTING:-0}}")) && args+=("-semihosting")
 args+=("${{@:2}}")
 
 exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
@@ -96,6 +99,9 @@ qemu_runner = rule(
             default = "@qemu-system-arm",
             executable = True,
             cfg = "exec",
+        ),
+        "_semihosting": attr.label(
+            default = "//toolchain:semihosting",
         ),
         "_runfiles": attr.label(
             default = "@bazel_tools//tools/bash/runfiles",

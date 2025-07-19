@@ -6,6 +6,7 @@ load("//board:defs.bzl", "BOARDS")
 bool_flag(
     name = "semihosting",
     build_setting_default = False,
+    visibility = ["//visibility:public"],
 )
 
 config_setting(
