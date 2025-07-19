@@ -2,6 +2,20 @@
 run QEMU for a specific machine
 """
 
+_runfiles_init = """
+# --- begin runfiles.bash initialization v3 ---
+# Copy-pasted from the Bazel Bash runfiles library v3.
+set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
+# shellcheck disable=SC1090
+source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
+source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
+source "$0.runfiles/$f" 2>/dev/null || \
+source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
+{ echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
+# --- end runfiles.bash initialization v3 ---
+"""
+
 def _impl(ctx):
     out = ctx.actions.declare_file(ctx.label.name)
 
@@ -12,20 +26,6 @@ def _impl(ctx):
     if ctx.attr.gdb:
         fixed_args.append("-gdb " + ctx.attr.gdb)
     fixed_args.extend(ctx.attr.extra_args)
-
-    runfiles_init = """
-# --- begin runfiles.bash initialization v3 ---
-# Copy-pasted from the Bazel Bash runfiles library v3.
-set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
-# shellcheck disable=SC1090
-source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
-  source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
-  source "$0.runfiles/$f" 2>/dev/null || \
-  source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-  source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-  { echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
-# --- end runfiles.bash initialization v3 ---
-"""
 
     ctx.actions.write(
         output = out,
@@ -53,15 +53,16 @@ fi
 
 binary="$1"
 
-exec $(rlocation {qemu_system_arm}) \
-    {fixed_args} \
-    -device loader,file="$binary" \
-    "${{@:2}}"
+args=({fixed_args} "-device" "loader,file=$binary")
+(("${{QEMU_SEMIHOSTING:-0}}")) && args+=("-semihosting")
+args+=("${{@:2}}")
+
+exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
 """.format(
             fixed_args = " ".join(fixed_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
             machine = ctx.attr.machine,
-            runfiles_init = runfiles_init,
+            runfiles_init = _runfiles_init,
             qemu_system_arm = "qemu-system-arm/qemu-system-arm",
         ),
         is_executable = True,
