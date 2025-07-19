@@ -115,6 +115,8 @@
     "https://bcr.bazel.build/modules/rules_license/1.0.0/source.json": "a52c89e54cc311196e478f8382df91c15f7a2bfdf4c6cd0e2675cc2ff0b56efb",
     "https://bcr.bazel.build/modules/rules_multirun/0.12.0/MODULE.bazel": "8c2a45d1ed9ad938a4f8088e78781017974f6a90e6fc4172f6e3f275812a0b48",
     "https://bcr.bazel.build/modules/rules_multirun/0.12.0/source.json": "95c835bcba571ddffda1ea34e48dc7d93ca204e669db2fd2681f1104f0812e4d",
+    "https://bcr.bazel.build/modules/rules_nixpkgs_core/0.13.0/MODULE.bazel": "b826d994220017d44c8a4e55435c2c2e6b4733eaaff69fff65232e0010afcb7b",
+    "https://bcr.bazel.build/modules/rules_nixpkgs_core/0.13.0/source.json": "c542b96a9d6ab189bd1a65da43e6c7b8be5f1099876ffba35cd9d2275f82740e",
     "https://bcr.bazel.build/modules/rules_pkg/0.7.0/MODULE.bazel": "df99f03fc7934a4737122518bb87e667e62d780b610910f0447665a7e2be62dc",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/MODULE.bazel": "5b1df97dbc29623bccdf2b0dcd0f5cb08e2f2c9050aab1092fd39a41e82686ff",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/source.json": "bd82e5d7b9ce2d31e380dd9f50c111d678c3bdaca190cb76b0e1c71b05e1ba8a",
@@ -247,6 +249,7 @@
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_license/0.0.7/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_license/1.0.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_multirun/0.12.0/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_nixpkgs_core/0.13.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_pkg/0.7.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_pkg/1.0.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/digiboys/bazel-registry/main/modules/rules_proto/4.0.0/MODULE.bazel": "not found",
@@ -277,6 +280,43 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
+    "//:extensions.bzl%flake_package_deps": {
+      "general": {
+        "bzlTransitiveDigest": "wtYg0JE5XNND/QiFA6JiBoDhOuCp/IzDDFM0mRugTcA=",
+        "usagesDigest": "vX014rS+yEZDrZ9WDxskY2ZZ/4Aace8GD0u9XC7muEY=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "qemu-system-arm": {
+            "repoRuleId": "@@rules_nixpkgs_core+//:nixpkgs.bzl%_nixpkgs_flake_package",
+            "attributes": {
+              "nix_flake_file": "@@//:flake.nix",
+              "nix_flake_lock_file": "@@//:flake.lock",
+              "nix_flake_file_deps": {},
+              "package": "qemu",
+              "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"qemu-system-arm\",\n    out = \"qemu-system-arm\",\n    src = \"bin/qemu-system-arm\",\n    visibility = [\"//visibility:public\"],\n)\n",
+              "nixopts": [],
+              "quiet": false,
+              "fail_not_supported": true,
+              "legacy_path_syntax": false
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "",
+            "rules_nixpkgs_core",
+            "rules_nixpkgs_core+"
+          ],
+          [
+            "rules_nixpkgs_core+",
+            "bazel_skylib",
+            "bazel_skylib+"
+          ]
+        ]
+      }
+    },
     "@@rules_kotlin+//src/main/starlark/core/repositories:bzlmod_setup.bzl%rules_kotlin_extensions": {
       "general": {
         "bzlTransitiveDigest": "hUTp2w+RUVdL7ma5esCXZJAFnX7vLbVfLd7FwnQI6bU=",

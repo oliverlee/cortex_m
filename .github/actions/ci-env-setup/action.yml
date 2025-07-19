@@ -17,6 +17,8 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: cachix/install-nix-action@v31
+
     - name: setup ci bazelrc
       shell: bash
       run: |

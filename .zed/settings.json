@@ -6,6 +6,15 @@
   "format_on_save": "off",
   "file_scan_exclusions": [".cache/"],
   "languages": {
+    "Nix": {
+      "language_servers": [ "nil", "!nixd" ],
+      "formatter": {
+             "external": {
+               "command": "alejandra",
+               "arguments": ["--quiet", "--"]
+             }
+           }
+    },
     "Starlark": {
       "enable_language_server": true,
       "language_servers": ["starpls"],
