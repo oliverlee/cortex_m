@@ -1,0 +1,5 @@
+filegroup(
+    name = "memory_region",
+    srcs = ["memory.x"],
+    visibility = ["//visibility:public"],
+)

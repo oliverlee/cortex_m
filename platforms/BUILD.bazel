@@ -1,9 +1,0 @@
-# platforms/BUILD
-
-package(default_visibility = ["//visibility:public"])
-
-platform(
-    name = "lm3s6965evb",
-    constraint_values = ["@stm32//boards/lm3s6965evb"],
-    parents = ["@arm_none_eabi//platforms:cortex-m3"],
-)

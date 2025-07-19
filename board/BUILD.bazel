@@ -1,0 +1,15 @@
+load(":defs.bzl", "BOARDS")
+
+constraint_setting(
+    name = "board",
+    visibility = ["//visibility:public"],
+)
+
+[
+    constraint_value(
+        name = board.name,
+        constraint_setting = ":board",
+        visibility = ["//visibility:public"],
+    )
+    for board in BOARDS
+]

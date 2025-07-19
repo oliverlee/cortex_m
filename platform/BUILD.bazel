@@ -1,0 +1,26 @@
+load("//board:defs.bzl", "BOARDS")
+
+[
+    platform(
+        name = cpu,
+        constraint_values = [
+            "@platforms//os:none",
+            "//cpu:{}".format(cpu),
+        ],
+        visibility = ["//visibility:public"],
+    )
+    for cpu in list({
+        board.cpu: None
+        for board in BOARDS
+    }.keys())
+]
+
+[
+    platform(
+        name = board.name,
+        constraint_values = ["//board:{board}".format(board = board.name)],
+        parents = [":{cpu}".format(cpu = board.cpu)],
+        visibility = ["//visibility:public"],
+    )
+    for board in BOARDS
+]

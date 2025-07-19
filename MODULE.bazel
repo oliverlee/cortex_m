@@ -1,0 +1,96 @@
+module(name = "bazel_stm32")
+
+bazel_dep(
+    name = "toolchains_llvm",
+    dev_dependency = True,
+)
+bazel_dep(
+    name = "toolchains_arm_gnu",
+    dev_dependency = True,
+)
+bazel_dep(
+    name = "platforms",
+    version = "1.0.0",
+    dev_dependency = True,
+)
+bazel_dep(
+    name = "rules_cc",
+    version = "0.1.3",
+    dev_dependency = True,
+)
+
+TOOLCHAINS_LLVM_COMMIT = "f1048a300d0be607c7f5092e323bc15b7ef8d8af"
+
+archive_override(
+    module_name = "toolchains_llvm",
+    integrity = "sha256-g9hKi+nAtM1ddbK9Ppkrx8LyY7K/Op3vSwopp2Kh85Y=",
+    strip_prefix = "toolchains_llvm-{commit}".format(
+        commit = TOOLCHAINS_LLVM_COMMIT,
+    ),
+    urls = ["https://github.com/bazel-contrib/toolchains_llvm/archive/{commit}.tar.gz".format(
+        commit = TOOLCHAINS_LLVM_COMMIT,
+    )],
+)
+
+TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+
+archive_override(
+    module_name = "toolchains_arm_gnu",
+    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
+    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
+        commit = TOOLCHAINS_ARM_GNU_COMMIT,
+    ),
+    urls = [
+        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
+            commit = TOOLCHAINS_ARM_GNU_COMMIT,
+        ),
+    ],
+)
+
+llvm = use_extension(
+    "@toolchains_llvm//toolchain/extensions:llvm.bzl",
+    "llvm",
+    dev_dependency = True,
+)
+llvm.toolchain(
+    cxx_flags = {
+        "": [
+            "-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_EXTENSIVE",
+            "-stdlib=c++20",
+            "-stdlib=libc++",
+            "-Wshadow",
+            "-Werror",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wnon-virtual-dtor",
+            "-Wold-style-cast",
+            "-Wcast-align",
+            "-Wunused",
+            "-Woverloaded-virtual",
+            "-Wmisleading-indentation",
+            "-Wnull-dereference",
+            "-Wdouble-promotion",
+            "-Wformat=2",
+            "-Wimplicit-fallthrough",
+            "-Wdocumentation-unknown-command",
+            "-Wextra-semi",
+            "-Wunreachable-code",
+            "-Wunreachable-code-return",
+        ],
+    },
+    llvm_version = "20.1.4",
+)
+use_repo(llvm, "llvm_toolchain")
+
+register_toolchains("@llvm_toolchain//:all")
+
+arm_toolchain = use_extension("@toolchains_arm_gnu//:extensions.bzl", "arm_toolchain")
+arm_toolchain.arm_none_eabi(version = "13.2.1")
+use_repo(arm_toolchain, "arm_none_eabi")
+
+register_toolchains(
+    "//toolchain:all",
+    dev_dependency = True,
+)
