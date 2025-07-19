@@ -1,4 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
+load("//rules:qemu_runner.bzl", "qemu_runner")
 
 xcode_config(name = "host_xcodes")
 
@@ -17,4 +18,8 @@ filegroup(
 cc_test(
     name = "dummy_test",
     srcs = ["dummy_test.cpp"],
+)
+
+qemu_runner(
+    name = "qemu_runner",
 )
