@@ -19,6 +19,9 @@ load("//board:defs.bzl", "BOARDS")
     platform(
         name = board.name,
         constraint_values = ["//board:{board}".format(board = board.name)],
+        flags = [
+            "--//config:machine={machine}".format(machine = board.name),
+        ],
         parents = [":{cpu}".format(cpu = board.cpu)],
         visibility = ["//visibility:public"],
     )

@@ -18,17 +18,26 @@ source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/
 # --- end runfiles.bash initialization v3 ---
 """
 
+def _config_from(attrs):
+    return struct(
+        semihosting = attrs._semihosting[BuildSettingInfo],
+        machine = attrs._machine[BuildSettingInfo].value,
+    )
+
 def _impl(ctx):
+    cfg = _config_from(ctx.attr)
+
     out = ctx.actions.declare_file(ctx.label.name)
 
     fixed_args = [
         "-display none",
-        "-machine " + ctx.attr.machine,
     ]
     if ctx.attr.gdb:
         fixed_args.append("-gdb " + ctx.attr.gdb)
-    if ctx.attr._semihosting[BuildSettingInfo]:
+    if cfg.semihosting:
         fixed_args.append("-semihosting")
+    if cfg.machine:
+        fixed_args.append("-machine " + cfg.machine)
     fixed_args.extend(ctx.attr.extra_args)
 
     ctx.actions.write(
@@ -40,7 +49,7 @@ set -euo pipefail
 if (($# == 0)); then
     echo "usage: bazel run {label} <binary> [additional-qemu-args...]"
     echo ""
-    echo "Run binary with QEMU for machine {machine}"
+    echo "Run binary with QEMU {for_machine}"
     echo ""
     echo "Arguments:"
     echo "  <binary>                  Path to the binary/ELF file to run"
@@ -64,7 +73,7 @@ exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
 """.format(
             fixed_args = " ".join(fixed_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
-            machine = ctx.attr.machine,
+            for_machine = ("for " + cfg.machine) if cfg.machine else "",
             runfiles_init = _runfiles_init,
             qemu_system_arm = "qemu-system-arm/qemu-system-arm",
         ),
@@ -84,10 +93,6 @@ exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
 qemu_runner = rule(
     implementation = _impl,
     attrs = {
-        "machine": attr.string(
-            mandatory = True,
-            doc = "QEMU machine type",
-        ),
         "gdb": attr.string(
             default = "tcp::1234",
             doc = "QEMU gdb port",
@@ -100,8 +105,11 @@ qemu_runner = rule(
             executable = True,
             cfg = "exec",
         ),
+        "_machine": attr.label(
+            default = "//config:machine",
+        ),
         "_semihosting": attr.label(
-            default = "//toolchain:semihosting",
+            default = "//config:semihosting",
         ),
         "_runfiles": attr.label(
             default = "@bazel_tools//tools/bash/runfiles",

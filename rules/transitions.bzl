@@ -5,16 +5,13 @@ Rule to transition the semihosting configuration of a binary
 load("@rules_cc//cc/common:cc_info.bzl", "CcInfo")
 load("@rules_cc//cc/common:debug_package_info.bzl", "DebugPackageInfo")
 
-def _semihosting_transition_impl(_settings, attr):
-    return {
-        "//toolchain:semihosting": {"enabled": True, "disabled": False}[attr.semihosting],
-    }
-
 _semihosting_transition = transition(
-    implementation = _semihosting_transition_impl,
+    implementation = lambda _settings, attr: {
+        "//config:semihosting": {"enabled": True, "disabled": False}[attr.semihosting],
+    },
     inputs = [],
     outputs = [
-        "//toolchain:semihosting",
+        "//config:semihosting",
     ],
 )
 

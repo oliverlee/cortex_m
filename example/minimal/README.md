@@ -15,7 +15,7 @@ In another terminal, run the target with qemu:
 ```sh
  bazel run \
     --platforms=//platform:lm3s6965evb \
-    --run_under=//tools/qemu:lm3s6965evb_runner \
+    --run_under=//:qemu_runner \
     -c dbg \
     //example/minimal -- \
     -S

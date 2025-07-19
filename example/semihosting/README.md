@@ -3,9 +3,9 @@ run with
 ```sh
 bazel run \
   --platforms=//platform:lm3s6965evb \
-  --run_under=//tools/qemu:lm3s6965evb_runner \
-  --//toolchain:semihosting=True \
-  //example/semihosting:example
+  --run_under=//:qemu_runner \
+  --//config:semihosting=True \
+  //example/semihosting:binary
 ```
 
 or
@@ -13,6 +13,6 @@ or
 ```sh
 bazel run \
   --platforms=//platform:lm3s6965evb \
-  --run_under=//tools/qemu:lm3s6965evb_runner \
+  --run_under=//:qemu_runner \
   //example/semihosting
 ```
