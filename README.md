@@ -1,18 +1,34 @@
 Examples for building for stm32 with Bazel
 
-# running with `qemu`
-An elf can be run under a host installation of `qemu-system-arm`:
+# building
+
+An elf can be built for a target platform by specifying the platform
 
 ```sh
-bazel run //examples/semihosting \
-  --platforms=@stm32//platforms:lm3s6965evb \
-  --run_under=//tools/qemu:semihosting
+bazel build \
+  --platforms=@stm32//platform:lm3s6965evb \
+  //example/minimal
 ```
 
-If other options for qemu are necessary:
+# running with `qemu`
+
+An elf can be run with `qemu-system-arm`. This requires an installation of `nix`
+to download the `qemu` package.
 
 ```sh
-bazel run <target> \
-  --platforms=@arm_none_eabi//platforms:cortex-m3 \
-  --run_under="//tools/qemu -machine <machine> -gdb tcp::3333 -S"
+bazel run \
+  --run_under=//:qemu_runner \
+  --platforms=//platform:lm3s6965evb \
+  //example/semihosting
+```
+
+By default, the QEMU runner accepts GDB connections on port 1234.
+
+If other options for `qemu` are necessary:
+
+```sh
+bazel run \
+  --run_under=//:qemu_runner \
+  --platforms=//platform:lm3s6965evb \
+  //example/semihosting -- <additional-args>
 ```
