@@ -1,0 +1,36 @@
+name: "CI environment setup"
+description: |
+  * set home bazelrc for CI runner
+  * set buildbuddy api key
+  * setup vendored external deps
+
+inputs:
+  buildbuddy-api-key:
+    required: true
+    description: |
+      BuildBuddy API key to access the remote cache.
+  external-cache-key:
+    default: ${{ runner.os }}-default
+    description: |
+      Key specifying which cache to restore.
+
+runs:
+  using: "composite"
+  steps:
+    - name: setup ci bazelrc
+      shell: bash
+      run: |
+        cp .github/workflows/ci.bazelrc ~/.bazelrc
+        echo 'build:remote-cache --remote_header=x-buildbuddy-api-key=${{ inputs.buildbuddy-api-key }}' >> ~/.bazelrc
+
+    - name: setup bazel vendored external deps
+      shell: bash
+      run: |
+        echo "common --vendor_dir=$HOME/bazel_external_deps" >> ~/.bazelrc
+
+    - name: restore bazel vendored external deps
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+          ~/bazel_external_deps
+        key: bazel-external-cache-${{ inputs.external-cache-key }}

@@ -1,3 +1,5 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
 filegroup(
     name = "format-config",
     srcs = [".clang-format"],
@@ -8,4 +10,9 @@ filegroup(
     name = "tidy-config",
     srcs = [".clang-tidy"],
     visibility = [":__subpackages__"],
+)
+
+cc_test(
+    name = "dummy_test",
+    srcs = ["dummy_test.cpp"],
 )
