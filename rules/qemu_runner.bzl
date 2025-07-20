@@ -30,10 +30,10 @@ def _impl(ctx):
     out = ctx.actions.declare_file(ctx.label.name)
 
     fixed_args = [
+        "-gdb tcp::1234",
         "-display none",
-    ]
-    if ctx.attr.gdb:
-        fixed_args.append("-gdb " + ctx.attr.gdb)
+        "-monitor stdio",
+    ] if ctx.attr.enable_default_args else []
     if cfg.semihosting:
         fixed_args.append("-semihosting")
     if cfg.machine:
@@ -93,12 +93,13 @@ exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
 qemu_runner = rule(
     implementation = _impl,
     attrs = {
-        "gdb": attr.string(
-            default = "tcp::1234",
-            doc = "QEMU gdb port",
-        ),
         "extra_args": attr.string_list(
+            default = [],
             doc = "Extra arguments to pass to QEMU",
+        ),
+        "enable_default_args": attr.bool(
+            default = True,
+            doc = "Enable default arguments passed to QEMU",
         ),
         "_qemu_system_arm": attr.label(
             default = "@qemu-system-arm",
