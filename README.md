@@ -32,3 +32,40 @@ bazel run \
   --platforms=//platform:lm3s6965evb \
   //example/semihosting -- <additional-args>
 ```
+
+# enabling semihosting
+
+By default, semihosting is not enabled when building targets. It can be enabled
+with bool flag `--//config:semihosting`.
+
+```sh
+bazel run \
+  --run_under=//:qemu_runner \
+  --platforms=//platform:lm3s6965evb \
+  --//config:semihosting \
+  //example/semihosting:binary
+```
+
+Alternatively, the `transition_semihosting_binary` can be used to transition a
+binary target to always enable or disable semihosting.
+
+```starlark
+transition_semihosting_binary(
+    name = "semihosting",
+    src = ":binary",
+    semihosting = "enabled",
+)
+```
+
+# running tests with `qemu`
+
+`cc_test` targets can be built for the target platform and run under emulation
+with `qemu-system-arm`.
+
+```sh
+bazel test \
+  --platforms=//platform:lm3s6965evb \
+  --extra_toolchains=//:qemu_test_runner_toolchain \
+  --//config:semihosting \
+  //...
+```
