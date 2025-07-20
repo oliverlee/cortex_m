@@ -1,4 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_test")
+load("//rules:cc_test_runner_toolchain.bzl", "cc_test_runner_toolchain")
 load("//rules:qemu_runner.bzl", "qemu_runner")
 
 xcode_config(name = "host_xcodes")
@@ -22,4 +23,23 @@ cc_test(
 
 qemu_runner(
     name = "qemu_runner",
+)
+
+qemu_runner(
+    name = "qemu_semihosting_runner",
+    extra_args = ["-semihosting"],
+)
+
+cc_test_runner_toolchain(
+    name = "qemu_cc_test_runner_toolchain",
+    test_runner = ":qemu_semihosting_runner",
+)
+
+toolchain(
+    name = "qemu_test_runner_toolchain",
+    target_compatible_with = [
+        "@platforms//os:none",
+    ],
+    toolchain = ":qemu_cc_test_runner_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:test_runner_toolchain_type",
 )

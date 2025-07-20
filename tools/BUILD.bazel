@@ -1,5 +1,6 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
 load("@rules_multirun//:defs.bzl", "multirun")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
@@ -99,6 +100,8 @@ alias(
 
 refresh_compile_commands(
     name = "compile_commands",
+    tags = ["manual"],
+    target_compatible_with = HOST_CONSTRAINTS,
     targets = {
         "//...": "--extra_toolchains=@llvm_toolchain//:all",
     },
