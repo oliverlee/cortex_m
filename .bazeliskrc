@@ -1,1 +1,2 @@
-USE_BAZEL_VERSION=8.x
+# use a fixed version to avoid checking online for the latest version
+USE_BAZEL_VERSION=8.3.1
