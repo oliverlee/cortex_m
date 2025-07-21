@@ -69,6 +69,8 @@ binary="$1"
 args=({fixed_args} "-device" "loader,file=$binary")
 args+=("${{@:2}}")
 
+[[ -n "${{QEMU_MACHINE:-}}" ]] && args+=("-machine" "$QEMU_MACHINE")
+
 exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
 """.format(
             fixed_args = " ".join(fixed_args),

@@ -1,14 +1,24 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
-load("//rules:transitions.bzl", "transition_semihosting_binary")
+load("//rules:transitions.bzl", "transition_config_binary")
 
 cc_binary(
     name = "binary",
     srcs = ["main.cpp"],
-    tags = ["manual"],
 )
 
-transition_semihosting_binary(
+# `transition_config_binary` must be run with `--run_under=//:qemu_runner` if
+# using a non-host platform since we cannot apply a transition to the
+# `--run_under` option.
+
+transition_config_binary(
     name = "semihosting",
     src = ":binary",
+    semihosting = "enabled",
+)
+
+transition_config_binary(
+    name = "semihosting.lm3s6965evb",
+    src = ":binary",
+    platform = "//platform:lm3s6965evb",
     semihosting = "enabled",
 )

@@ -14,5 +14,12 @@ or
 bazel run \
   --platforms=//platform:lm3s6965evb \
   --run_under=//:qemu_runner \
-  //example/semihosting
+  //example/semihosting:semihosting
+```
+or
+
+```sh
+bazel run \
+  --run_under=//:qemu_runner    \
+  //example/semihosting:semihosting.lm3s6965evb
 ```
