@@ -10,7 +10,7 @@ LoggingInfo = provider(
     },
 )
 
-def _impl(ctx):
+def _binary_log_impl(ctx):
     stdout = ctx.actions.declare_file(ctx.label.name + ".stdout")
     stderr = ctx.actions.declare_file(ctx.label.name + ".stderr")
 
@@ -92,7 +92,7 @@ exit $exit_code
     ]
 
 binary_log = rule(
-    implementation = _impl,
+    implementation = _binary_log_impl,
     attrs = {
         "src": attr.label(
             mandatory = True,
@@ -116,4 +116,83 @@ binary_log = rule(
         ),
     },
     provides = [DefaultInfo],
+)
+
+def _binary_log_test_impl(ctx):
+    if not (ctx.attr.expected_stdout or ctx.attr.expected_stderr):
+        fail("At least one of 'expected_stdout' or 'expected_stderr' must be provided")
+
+    content = [
+        "#!/usr/bin/env bash",
+        "set -euo pipefail",
+        "",
+        "exit_code=0",
+    ]
+    paths = {}
+    runfiles = []
+
+    for fd in ["stdout", "stderr"]:
+        if getattr(ctx.file, "expected_" + fd):
+            expected_file = getattr(ctx.file, "expected_" + fd)
+            actual_file = getattr(ctx.attr.logs[LoggingInfo], fd)
+
+            content += [
+                line.format(fd = fd)
+                for line in [
+                    "",
+                    "echo '--- {fd} ---'",
+                    "diff {{expected_{fd}}} {{actual_{fd}}} || exit_code=1",
+                    "echo '--------------'",
+                ]
+            ]
+            paths |= {
+                "expected_" + fd: expected_file.short_path,
+                "actual_" + fd: actual_file.short_path,
+            }
+            runfiles += [
+                expected_file,
+                actual_file,
+            ]
+
+    content.append("exit $exit_code")
+
+    executable = ctx.actions.declare_file(ctx.label.name + ".bash")
+    ctx.actions.write(
+        output = executable,
+        content = "\n".join(content).format(**paths),
+        is_executable = True,
+    )
+
+    return [
+        DefaultInfo(
+            executable = executable,
+            runfiles = ctx.runfiles(files = runfiles),
+        ),
+        RunEnvironmentInfo(
+            environment = ctx.attr.env,
+            inherited_environment = [],
+        ),
+    ]
+
+binary_log_test = rule(
+    implementation = _binary_log_test_impl,
+    attrs = {
+        "logs": attr.label(
+            mandatory = True,
+            doc = "Log files to compare with",
+            providers = [LoggingInfo],
+        ),
+        "expected_stdout": attr.label(
+            allow_single_file = True,
+            doc = "Expected stdout of the binary. If 'None', 'stdout' is not tested.",
+        ),
+        "expected_stderr": attr.label(
+            allow_single_file = True,
+            doc = "Expected stdout of the binary. If 'None', 'stderr' is not tested.",
+        ),
+        "env": attr.string_dict(
+            doc = "Environment variables set when comparing files",
+        ),
+    },
+    test = True,
 )
