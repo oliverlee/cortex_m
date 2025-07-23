@@ -122,6 +122,14 @@ def _binary_log_test_impl(ctx):
     if not (ctx.attr.expected_stdout or ctx.attr.expected_stderr):
         fail("At least one of 'expected_stdout' or 'expected_stderr' must be provided")
 
+    if (bool(ctx.attr.logs) == bool(ctx.attr.src)):
+        fail("Only one of 'logs' or 'src' must be provided.")
+
+    if ctx.attr.run_under and not ctx.attr.src:
+        fail("'run_under' may only used if 'src' is provided.")
+
+    logs = ctx.attr.logs[LoggingInfo] if ctx.attr.logs else _binary_log_impl(ctx)[1]
+
     content = [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
@@ -134,7 +142,7 @@ def _binary_log_test_impl(ctx):
     for fd in ["stdout", "stderr"]:
         if getattr(ctx.file, "expected_" + fd):
             expected_file = getattr(ctx.file, "expected_" + fd)
-            actual_file = getattr(ctx.attr.logs[LoggingInfo], fd)
+            actual_file = getattr(logs, fd)
 
             content += [
                 line.format(fd = fd)
@@ -178,9 +186,24 @@ binary_log_test = rule(
     implementation = _binary_log_test_impl,
     attrs = {
         "logs": attr.label(
-            mandatory = True,
             doc = "Log files to compare with",
             providers = [LoggingInfo],
+        ),
+        "src": attr.label(
+            executable = True,
+            cfg = "target",
+            doc = (
+                "Binary to execute on the exec platform. This is built for " +
+                "the target platform."
+            ),
+        ),
+        "run_under": attr.label(
+            executable = True,
+            cfg = "exec",
+            doc = (
+                "Runner used to execute the binary. This is built for the " +
+                "host platform."
+            ),
         ),
         "expected_stdout": attr.label(
             allow_single_file = True,
@@ -191,7 +214,10 @@ binary_log_test = rule(
             doc = "Expected stdout of the binary. If 'None', 'stderr' is not tested.",
         ),
         "env": attr.string_dict(
-            doc = "Environment variables set when comparing files",
+            doc = (
+                "Environment variables set when comparing files. The same env " +
+                "is used if this rule also executes the binary."
+            ),
         ),
     },
     test = True,
