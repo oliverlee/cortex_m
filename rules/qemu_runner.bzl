@@ -90,6 +90,10 @@ exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
                 transitive_files = ctx.attr._runfiles.files,
             ),
         ),
+        RunEnvironmentInfo(
+            environment = ctx.attr.env,
+            inherited_environment = [],
+        ),
     ]
 
 qemu_runner = rule(
@@ -102,6 +106,9 @@ qemu_runner = rule(
         "enable_default_args": attr.bool(
             default = True,
             doc = "Enable default arguments passed to QEMU",
+        ),
+        "env": attr.string_dict(
+            doc = "Environment variables set when running QEMU",
         ),
         "_qemu_system_arm": attr.label(
             default = "@qemu-system-arm",
@@ -119,4 +126,5 @@ qemu_runner = rule(
         ),
     },
     executable = True,
+    provides = [DefaultInfo, RunEnvironmentInfo],
 )
