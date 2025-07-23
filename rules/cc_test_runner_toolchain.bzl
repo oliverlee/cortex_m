@@ -99,4 +99,5 @@ cc_test_runner_toolchain = rule(
             doc = "Binary used to run the test executable",
         ),
     },
+    provides = [platform_common.ToolchainInfo],
 )

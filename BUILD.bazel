@@ -19,6 +19,7 @@ filegroup(
 
 qemu_runner(
     name = "qemu_runner",
+    visibility = ["//visibility:public"],
 )
 
 qemu_runner(
