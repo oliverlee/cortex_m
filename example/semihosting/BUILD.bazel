@@ -1,5 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary")
-load("//rules:binary_log.bzl", "binary_log")
+load("//rules:binary_log.bzl", "binary_log", "binary_log_test")
 load("//rules:transitions.bzl", "transition_config_binary")
 
 cc_binary(
@@ -28,4 +28,10 @@ binary_log(
     name = "semihosting.lm3s6965evb.log",
     src = "semihosting.lm3s6965evb",
     run_under = "//:qemu_runner",
+)
+
+binary_log_test(
+    name = "semihosting.lm3s6965evb.test",
+    expected_stdout = "stdout",
+    logs = ":semihosting.lm3s6965evb.log",
 )
