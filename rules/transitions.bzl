@@ -57,7 +57,7 @@ def _transition_config_binary_impl(ctx):
         "QEMU_MACHINE": machine,
     } if machine else {}
 
-    inherit_env = ctx.attr.inherit_env
+    inherit_env = []
     if RunEnvironmentInfo in target:
         env = target[RunEnvironmentInfo].environment | env
         inherit_env = target[RunEnvironmentInfo].inherited_environment
@@ -88,9 +88,6 @@ _common_attrs = {
         providers = [CcInfo],
         doc = "The binary to transition",
     ),
-    "inherit_env": attr.string_list(
-        doc = "Environment variables to inherit",
-    ),
     "semihosting": attr.string(
         values = ["enabled", "disabled"],
         doc = "Enable or disable semihosting or leave it unchanged if `None`",
@@ -114,6 +111,7 @@ transition_config_binary = rule(
     cfg = _config_transition,
     attrs = _common_attrs,
     executable = True,
+    provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
 )
 
 transition_config_test = rule(
@@ -121,4 +119,5 @@ transition_config_test = rule(
     cfg = _config_transition,
     attrs = _common_attrs,
     test = True,
+    provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
 )
