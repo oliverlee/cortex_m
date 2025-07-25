@@ -18,7 +18,7 @@ In another terminal, run the target with qemu:
     --run_under=//:qemu_runner \
     -c dbg \
     //example/minimal -- \
-    -S
+    -s -S
 ```
 
 Connect with gdb:
