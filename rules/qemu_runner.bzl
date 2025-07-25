@@ -30,7 +30,6 @@ def _impl(ctx):
     out = ctx.actions.declare_file(ctx.label.name)
 
     fixed_args = [
-        "-gdb tcp::1234",
         "-display none",
         "-monitor stdio",
     ] if ctx.attr.enable_default_args else []
