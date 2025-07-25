@@ -547,7 +547,7 @@
     "@@toolchains_llvm+//toolchain/extensions:llvm.bzl%llvm": {
       "general": {
         "bzlTransitiveDigest": "Uhg2vSQY2rksw+nbydQV4xE0U88vI2En97fafK2Z3fM=",
-        "usagesDigest": "T03Sok986zDN4oeqnFSkMLRulVuPGBaA5oxMbQ+anBc=",
+        "usagesDigest": "xOhR8O7MhpCzQ+TI3iYORJu4mJwV1yj49QdEwpvWdRs=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -584,7 +584,7 @@
               "cxx_flags": {
                 "": [
                   "-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_EXTENSIVE",
-                  "-stdlib=c++20",
+                  "-std=c++20",
                   "-stdlib=libc++",
                   "-Wshadow",
                   "-Werror",
