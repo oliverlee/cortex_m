@@ -51,4 +51,6 @@ transition_config_test(
     src = ":dummy_test",
     platform = "//platform:lm3s6965evb",
     semihosting = "enabled",
+    # current startup script does not handle semihosting
+    tags = ["manual"],
 )

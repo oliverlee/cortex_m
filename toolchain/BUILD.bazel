@@ -2,84 +2,79 @@ load("@arm_none_eabi//toolchain:toolchain.bzl", "arm_none_eabi_toolchain")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("//board:defs.bzl", "BOARDS")
 
+cc_library(
+    name = "start_cortex-m3",
+    srcs = select({
+        "//config:semihosting_disabled": ["startup_cortex-m3.cpp"],
+        "//config:semihosting_enabled": [],
+    }),
+    additional_linker_inputs = [
+        "cortex-m3.ld",
+    ],
+    copts = [
+        "-ffreestanding",
+    ],
+    linkopts = [
+        "-T $(location :cortex-m3.ld)",
+    ] + select({
+        "//config:semihosting_disabled": ["-nostartfiles"],
+        "//config:semihosting_enabled": ["-specs=rdimon.specs"],
+    }),
+    tags = ["manual"],
+    alwayslink = True,
+)
+
 [
-    (
-        cc_library(
-            name = "start_{board}".format(board = board.name),
-            srcs = [
-                # TODO write a better startup file
-                "startup_ARMCM3.S",
-            ] + select({
-                "//config:semihosting_disabled": ["startup.cpp"],
-                "//config:semihosting_enabled": [],
-            }),
-            additional_linker_inputs = [
-                "//board/{board}:memory_region".format(board = board.name),
-                "link.x",
-            ],
-            linkopts = [
-                "-T $(location //board/{board}:memory_region)".format(board = board.name),
-                "-T $(location :link.x)",
-            ] + select({
-                "//config:semihosting_disabled": ["-nostartfiles"],
-                "//config:semihosting_enabled": ["-specs=rdimon.specs"],
-            }),
-            local_defines = ["__NO_SYSTEM_INIT"],
-            target_compatible_with = [
-                "@platforms//os:none",
-                "//cpu:{cpu}".format(cpu = board.cpu),
-                "//board:{board}".format(board = board.name),
-            ],
-            alwayslink = True,
-        ),
-        arm_none_eabi_toolchain(
-            name = "{board}_toolchain".format(board = board.name),
-            additional_link_libraries = [
-                ":start_{board}".format(board = board.name),
-            ],
-            copts = [
-                "-mcpu={cpu}".format(cpu = board.cpu),
-                "-mthumb",
-                "-mfloat-abi=soft",
-                "-fdiagnostics-color",
-                "-specs=nano.specs",
-                "-Werror",
-                "-Wall",
-                "-Wextra",
-                "-Wpedantic",
-                "-Wconversion",
-                "-Wnon-virtual-dtor",
-                "-Wold-style-cast",
-                "-Wcast-align",
-                "-Wunused",
-                "-Woverloaded-virtual",
-                "-Wmisleading-indentation",
-                "-Wnull-dereference",
-                "-Wdouble-promotion",
-                "-Wformat=2",
-                "-Wimplicit-fallthrough",
-                "-Wextra-semi",
-                "-Wunreachable-code",
-            ],
-            cxxopts = [
-                "-std=c++20",
-                "-ffreestanding",
-            ],
-            linkopts = [
-                "-mcpu={cpu}".format(cpu = board.cpu),
-                "-mthumb",
-                "-mfloat-abi=soft",
-                "-specs=nano.specs",
-                "-Wl,--gc-sections",
-                "-Wl,--fatal-warnings",
-            ],
-            target_compatible_with = [
-                "@platforms//os:none",
-                "//cpu:{cpu}".format(cpu = board.cpu),
-                "//board:{board}".format(board = board.name),
-            ],
-            visibility = ["//visibility:public"],
-        ),
+    arm_none_eabi_toolchain(
+        name = "{board}_toolchain".format(board = board.name),
+        additional_link_libraries = [
+            "//board/{board}:memory_region".format(board = board.name),
+            ":start_{cpu}".format(cpu = board.cpu),
+        ],
+        copts = [
+            "-mcpu={cpu}".format(cpu = board.cpu),
+            "-mthumb",
+            "-mfloat-abi=soft",
+            "-fdiagnostics-color",
+            "-fno-exceptions",
+            "-specs=nano.specs",
+            "-Werror",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wnon-virtual-dtor",
+            "-Wold-style-cast",
+            "-Wcast-align",
+            "-Wunused",
+            "-Woverloaded-virtual",
+            "-Wmisleading-indentation",
+            "-Wnull-dereference",
+            "-Wdouble-promotion",
+            "-Wformat=2",
+            "-Wimplicit-fallthrough",
+            "-Wextra-semi",
+            "-Wunreachable-code",
+        ],
+        cxxopts = [
+            "-std=c++20",
+            "-ffreestanding",
+        ],
+        linkopts = [
+            "-mcpu={cpu}".format(cpu = board.cpu),
+            "-mthumb",
+            "-mfloat-abi=soft",
+            "-fno-exceptions",
+            "-specs=nano.specs",
+            "-Wl,--gc-sections",
+            "-Wl,--fatal-warnings",
+        ],
+        target_compatible_with = [
+            "@platforms//os:none",
+            "//cpu:{cpu}".format(cpu = board.cpu),
+            "//board:{board}".format(board = board.name),
+        ],
+        visibility = ["//visibility:public"],
     )
     for board in BOARDS
 ]

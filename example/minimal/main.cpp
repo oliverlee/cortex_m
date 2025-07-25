@@ -2,11 +2,11 @@
 
 auto main() -> int
 {
-  auto x = 0;
-  auto y = 3;
+  const auto x = 0;
+  const auto y = 3;
 
   for (;;) {
-    auto z = x + y;
+    volatile auto z = x + y;
     std::ignore = z;
   }
 }
