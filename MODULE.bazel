@@ -95,7 +95,7 @@ llvm.toolchain(
     cxx_flags = {
         "": [
             "-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_EXTENSIVE",
-            "-stdlib=c++20",
+            "-std=c++20",
             "-stdlib=libc++",
             "-Wshadow",
             "-Werror",
