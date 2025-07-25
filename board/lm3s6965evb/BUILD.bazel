@@ -1,5 +1,7 @@
-filegroup(
+load("//rules:cc_include_linker_script.bzl", "cc_include_linker_script")
+
+cc_include_linker_script(
     name = "memory_region",
-    srcs = ["memory.x"],
+    srcs = ["memory.ld"],
     visibility = ["//visibility:public"],
 )
