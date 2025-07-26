@@ -4,10 +4,7 @@ load("//board:defs.bzl", "BOARDS")
 
 cc_library(
     name = "start_cortex-m3",
-    srcs = select({
-        "//config:semihosting_disabled": ["startup_cortex-m3.cpp"],
-        "//config:semihosting_enabled": [],
-    }),
+    srcs = ["startup_cortex-m3.cpp"],
     additional_linker_inputs = [
         "cortex-m3.ld",
     ],
@@ -16,9 +13,12 @@ cc_library(
     ],
     linkopts = [
         "-T $(location :cortex-m3.ld)",
+        "-nostartfiles",
     ] + select({
-        "//config:semihosting_disabled": ["-nostartfiles"],
-        "//config:semihosting_enabled": ["-specs=rdimon.specs"],
+        "//config:semihosting_disabled": [],
+        "//config:semihosting_enabled": [
+            "-specs=rdimon.specs",
+        ],
     }),
     tags = ["manual"],
     alwayslink = True,

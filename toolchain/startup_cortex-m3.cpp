@@ -47,6 +47,8 @@ auto main() -> int;
 auto system_init() -> void;
 [[gnu::weak]]
 auto __pre_init() -> void;
+[[gnu::weak]]
+auto initialise_monitor_handles() -> void;
 }
 
 namespace {
@@ -91,12 +93,39 @@ auto halt() -> void
   }
 }
 
+[[noreturn]]
 auto _exit(int ec) -> void
 {
   destructors();
 
-  std::ignore = ec;
-  halt();
+  if (initialise_monitor_handles) {
+    // https://github.com/ARM-software/abi-aa/blob/main/semihosting/semihosting.rst#sys-exit-extended-0x20
+    static constexpr auto SYS_EXIT_EXTENDED = std::int32_t{0x20U};
+    static constexpr auto ADP_Stopped_ApplicationExit = std::int32_t{0x20026};
+
+    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
+    const std::int32_t argblock[2] = {
+        ADP_Stopped_ApplicationExit,  //
+        static_cast<std::int32_t>(ec)
+    };
+
+    // https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html
+    register auto r0 asm("r0") = SYS_EXIT_EXTENDED;
+    register auto r1 asm("r1") = static_cast<const void*>(argblock);
+
+    // https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+    asm volatile(
+        "bkpt #0xAB"
+        :                   // no outputs
+        : "r"(r0), "r"(r1)  // inputs in r0 and r1
+        : "memory"          // may read from argblock
+    );
+  } else {
+    std::ignore = ec;
+    halt();
+  }
+
+  __builtin_unreachable();
 }
 
 template <std::size_t N, auto value>
@@ -128,7 +157,8 @@ struct vector_table_t
 
 }  // namespace
 
-extern "C" auto _start() -> void
+extern "C" [[noreturn]]
+auto _start() -> void
 {
   if (__pre_init) {
     __pre_init();
@@ -136,6 +166,10 @@ extern "C" auto _start() -> void
 
   init_data();
   init_bss();
+
+  if (initialise_monitor_handles) {
+    initialise_monitor_handles();
+  }
 
   constructors();
 
