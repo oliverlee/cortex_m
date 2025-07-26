@@ -69,7 +69,7 @@ genrule(
     cmd = """
 echo "#!/bin/bash" > $@
 echo "cd \\$$BUILD_WORKSPACE_DIRECTORY" >> $@
-echo "exec bazelisk build {options} \\$${{@:-//...}}" >> $@
+echo "exec bazelisk build {options} -- \\$${{@:-//... -//board/...}}" >> $@
 """.format(
         options = " ".join([
             "--aspects=@rules_clang_tidy//:aspects.bzl%check",
