@@ -119,8 +119,24 @@ binary_log = rule(
 )
 
 def _binary_log_test_impl(ctx):
-    if not (ctx.attr.expected_stdout or ctx.attr.expected_stderr):
-        fail("At least one of 'expected_stdout' or 'expected_stderr' must be provided")
+    if (
+        not (ctx.attr.expected_stdout or ctx.attr.expected_stderr) and
+        not ctx.attr.skip_expected_check
+    ):
+        fail(
+            "At least one of 'expected_stdout' or 'expected_stderr' must be " +
+            "provided. Or expected output checks can be skipped by setting " +
+            "'skip_expected_check'.",
+        )
+
+    if (
+        ctx.attr.skip_expected_check and
+        (ctx.attr.expected_stdout or ctx.attr.expected_stderr)
+    ):
+        fail(
+            "Cannot use 'skip_expected_check' if either 'expected_stdout' " +
+            "or 'expected_stderr' are provided.",
+        )
 
     if (bool(ctx.attr.logs) == bool(ctx.attr.src)):
         fail("Only one of 'logs' or 'src' must be provided.")
@@ -215,6 +231,13 @@ binary_log_test = rule(
         "expected_stderr": attr.label(
             allow_single_file = True,
             doc = "Expected stdout of the binary. If 'None', 'stderr' is not tested.",
+        ),
+        "skip_expected_check": attr.bool(
+            default = False,
+            doc = (
+                "Skip expected output checks. Can be used to define a test " +
+                "with a custom QEMU runner."
+            ),
         ),
         "env": attr.string_dict(
             doc = (

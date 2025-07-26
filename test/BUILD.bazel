@@ -1,4 +1,5 @@
 load("//rules:qemu_output_test.bzl", "qemu_output_test")
+load("//rules:qemu_runner.bzl", "qemu_runner")
 
 [
     qemu_output_test(
@@ -11,5 +12,30 @@ load("//rules:qemu_output_test.bzl", "qemu_output_test")
     for basename in [
         "hello_semihosting",
         "global_ctor_dtor",
+    ]
+]
+
+[
+    (
+        qemu_runner(
+            name = "qemu_failure_runner_{}".format(exit_code),
+            exit_code = exit_code,
+            extra_args = ["-semihosting"],
+        ),
+        qemu_output_test(
+            name = "failure_{}_test".format(exit_code),
+            size = "small",
+            srcs = ["failure.cpp"],
+            expected_output = None,
+            local_defines = ["EXIT_CODE={}".format(exit_code)],
+            platform = "//platform:lm3s6965evb",
+            run_under = ":qemu_failure_runner_{}".format(exit_code),
+            skip_expected_check = True,
+        ),
+    )
+    for exit_code in [
+        1,
+        2,
+        3,
     ]
 ]
