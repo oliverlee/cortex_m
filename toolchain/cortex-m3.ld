@@ -132,6 +132,9 @@ SECTIONS
         _ebss = .;
     } > RAM :rw
 
+    _end = .;
+    PROVIDE(end = _end);  /* rdimon expects 'end' without underscore */
+
     /* Stack grows down from top of RAM */
     .stack (NOLOAD) :
     {
