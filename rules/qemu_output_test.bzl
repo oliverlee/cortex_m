@@ -12,12 +12,14 @@ def qemu_output_test(
         srcs,
         expected_output,
         platform,
+        local_defines = None,
         run_under = "//:qemu_runner",
         diff = "diff -u --color=always --strip-trailing-cr",
         **kwargs):
     cc_binary(
         name = name + ".binary",
         srcs = srcs,
+        local_defines = local_defines,
         tags = ["manual"],
         visibility = ["//visibility:private"],
     )

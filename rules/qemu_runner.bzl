@@ -70,13 +70,20 @@ args+=("${{@:2}}")
 
 [[ -n "${{QEMU_MACHINE:-}}" ]] && args+=("-machine" "$QEMU_MACHINE")
 
-exec $(rlocation {qemu_system_arm}) "${{args[@]}}"
+exit_code=0
+$(rlocation {qemu_system_arm}) "${{args[@]}}" || exit_code=$?
+if ((exit_code != {exit_code})); then
+    printf "QEMU exited with \'$exit_code\' but " >&2
+    printf "this runner expected '{exit_code}'\n" >&2
+    exit 1
+fi
 """.format(
             fixed_args = " ".join(fixed_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
             for_machine = ("for " + cfg.machine) if cfg.machine else "",
             runfiles_init = _runfiles_init,
             qemu_system_arm = "qemu-system-arm/qemu-system-arm",
+            exit_code = ctx.attr.exit_code,
         ),
         is_executable = True,
     )
@@ -108,6 +115,10 @@ qemu_runner = rule(
         ),
         "env": attr.string_dict(
             doc = "Environment variables set when running QEMU",
+        ),
+        "exit_code": attr.int(
+            default = 0,
+            doc = "Exit code of the QEMU process for success",
         ),
         "_qemu_system_arm": attr.label(
             default = "@qemu-system-arm",
