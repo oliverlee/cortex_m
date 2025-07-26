@@ -18,7 +18,7 @@
 
 // NOLINTBEGIN(bugprone-reserved-identifier,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
-static constexpr auto __dso_handle = static_cast<void*>(nullptr);
+auto __dso_handle = static_cast<void*>(nullptr);
 
 namespace {
 using init_fini_function_type = auto (*)() -> void;
