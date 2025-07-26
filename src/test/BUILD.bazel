@@ -1,9 +1,0 @@
-#load("@rules_cc//cc:defs.bzl", "cc_library")
-#
-#cc_library(
-#    name = "cfg",
-#    hdrs = ["cfg.hpp"],
-#    include_prefix = "test",
-#    linkstatic = True,
-#    visibility = ["//visibility:public"],
-#)
