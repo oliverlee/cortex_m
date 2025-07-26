@@ -145,11 +145,14 @@ def _binary_log_test_impl(ctx):
             actual_file = getattr(logs, fd)
 
             content += [
-                line.format(fd = fd)
+                line.format(
+                    fd = fd,
+                    diff = ctx.attr.diff,
+                )
                 for line in [
                     "",
                     "echo '--- {fd} ---'",
-                    "diff {{expected_{fd}}} {{actual_{fd}}} || exit_code=1",
+                    "{diff} {{expected_{fd}}} {{actual_{fd}}} || exit_code=1",
                     "echo '--------------'",
                 ]
             ]
@@ -218,6 +221,10 @@ binary_log_test = rule(
                 "Environment variables set when comparing files. The same env " +
                 "is used if this rule also executes the binary."
             ),
+        ),
+        "diff": attr.string(
+            default = "diff -u --color=always",
+            doc = "Diff command used to compare files.",
         ),
     },
     test = True,

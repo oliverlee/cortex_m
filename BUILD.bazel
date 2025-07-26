@@ -1,7 +1,5 @@
-load("@rules_cc//cc:defs.bzl", "cc_test")
 load("//rules:cc_test_runner_toolchain.bzl", "cc_test_runner_toolchain")
 load("//rules:qemu_runner.bzl", "qemu_runner")
-load("//rules:transitions.bzl", "transition_config_test")
 
 xcode_config(name = "host_xcodes")
 
@@ -39,16 +37,4 @@ toolchain(
     ],
     toolchain = ":qemu_cc_test_runner_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:test_runner_toolchain_type",
-)
-
-cc_test(
-    name = "dummy_test",
-    srcs = ["dummy_test.cpp"],
-)
-
-transition_config_test(
-    name = "dummy_test.lm3s6965evb",
-    src = ":dummy_test",
-    platform = "//platform:lm3s6965evb",
-    semihosting = "enabled",
 )

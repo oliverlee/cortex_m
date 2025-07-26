@@ -1,0 +1,24 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("//rules:binary_log.bzl", "binary_log_test")
+load("//rules:transitions.bzl", "transition_config_binary")
+
+cc_binary(
+    name = "hello_semihosting",
+    srcs = ["hello_semihosting.cpp"],
+)
+
+transition_config_binary(
+    name = "hello_semihosting.lm3s6965evb",
+    src = ":hello_semihosting",
+    platform = "//platform:lm3s6965evb",
+    semihosting = "enabled",
+)
+
+binary_log_test(
+    name = "hello_semihosting.lm3s6965evb.test",
+    size = "small",
+    src = "hello_semihosting.lm3s6965evb",
+    diff = "diff -u --color=always --strip-trailing-cr",
+    expected_stdout = "hello_semihosting.stdout",
+    run_under = "//:qemu_runner",
+)
