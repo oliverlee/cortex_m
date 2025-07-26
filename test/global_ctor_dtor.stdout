@@ -1,0 +1,4 @@
+QEMU 9.2.4 monitor - type 'help' for more information
+(qemu) chatty()
+in main
+~chatty()

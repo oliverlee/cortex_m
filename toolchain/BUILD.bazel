@@ -37,6 +37,7 @@ cc_library(
             "-mfloat-abi=soft",
             "-fdiagnostics-color",
             "-fno-exceptions",
+            "-fno-use-cxa-atexit",
             "-specs=nano.specs",
             "-Werror",
             "-Wall",

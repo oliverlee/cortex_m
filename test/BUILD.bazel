@@ -1,9 +1,15 @@
 load("//rules:qemu_output_test.bzl", "qemu_output_test")
 
-qemu_output_test(
-    name = "hello_semihosting_test",
-    size = "small",
-    srcs = ["hello_semihosting.cpp"],
-    expected_output = "hello_semihosting.stdout",
-    platform = "//platform:lm3s6965evb",
-)
+[
+    qemu_output_test(
+        name = basename + "_test",
+        size = "small",
+        srcs = [basename + ".cpp"],
+        expected_output = basename + ".stdout",
+        platform = "//platform:lm3s6965evb",
+    )
+    for basename in [
+        "hello_semihosting",
+        "global_ctor_dtor",
+    ]
+]
