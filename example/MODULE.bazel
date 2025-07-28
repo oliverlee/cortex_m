@@ -1,8 +1,8 @@
-module(name = "bazel-stm32_examples")
+module(name = "cortex_m_examples")
 
-bazel_dep(name = "bazel_stm32", dev_dependency = True)
+bazel_dep(name = "cortex_m", dev_dependency = True)
 local_path_override(
-    module_name = "bazel_stm32",
+    module_name = "cortex_m",
     path = "..",
 )
 

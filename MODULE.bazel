@@ -1,4 +1,4 @@
-module(name = "bazel_stm32")
+module(name = "cortex_m")
 
 bazel_dep(
     name = "toolchains_arm_gnu",

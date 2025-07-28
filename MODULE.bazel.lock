@@ -282,17 +282,24 @@
   "moduleExtensions": {
     "//:extensions.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "jvwW6yHawlv2rrI9JzoDfak/3WcFYL7/JAgG/9TleU0=",
-        "usagesDigest": "vX014rS+yEZDrZ9WDxskY2ZZ/4Aace8GD0u9XC7muEY=",
+        "bzlTransitiveDigest": "YpD/p2YS9qYE8w6PMmYRnrWJ8+0A1ET4O5w0xuCGZdw=",
+        "usagesDigest": "8ZXTUdVibdyiDz3XODCSlSo2n3N3rzNiQyGwICz2vOc=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
+          "flake_copy": {
+            "repoRuleId": "@@//:extensions.bzl%_flake_copy",
+            "attributes": {
+              "flake_file": "@@//:flake.nix",
+              "flake_lock_file": "@@//:flake.lock"
+            }
+          },
           "qemu-system-arm": {
             "repoRuleId": "@@rules_nixpkgs_core+//:nixpkgs.bzl%_nixpkgs_flake_package",
             "attributes": {
-              "nix_flake_file": "@@//:flake.nix",
-              "nix_flake_lock_file": "@@//:flake.lock",
+              "nix_flake_file": "@@+flake_package_deps+flake_copy//:flake.nix",
+              "nix_flake_lock_file": "@@+flake_package_deps+flake_copy//:flake.lock",
               "nix_flake_file_deps": {},
               "package": "qemu",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"qemu-system-arm\",\n    out = \"qemu-system-arm\",\n    src = \"bin/qemu-system-arm\",\n    visibility = [\"//visibility:public\"],\n)\n",
@@ -384,7 +391,7 @@
     "@@toolchains_arm_gnu+//:extensions.bzl%arm_toolchain": {
       "general": {
         "bzlTransitiveDigest": "kTqfR1zJvQQ9JYm48vfw+QETXPMHlw+EVElMdATmtuQ=",
-        "usagesDigest": "qWXCygOPi79FBicXixNco6JbK6zWjMRIPqqVCUay4gM=",
+        "usagesDigest": "J/cM1VONyJl+MmBHdryf9ZSr03g3eK7d2O2eN1sWQ4I=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -547,7 +554,7 @@
     "@@toolchains_llvm+//toolchain/extensions:llvm.bzl%llvm": {
       "general": {
         "bzlTransitiveDigest": "Uhg2vSQY2rksw+nbydQV4xE0U88vI2En97fafK2Z3fM=",
-        "usagesDigest": "xOhR8O7MhpCzQ+TI3iYORJu4mJwV1yj49QdEwpvWdRs=",
+        "usagesDigest": "VvyO6/SX1IsaGXqLW0Snf/LHGTyJCYCGaH4GeEzwXPk=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},

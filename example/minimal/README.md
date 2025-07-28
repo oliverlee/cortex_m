@@ -2,7 +2,7 @@ Build the target, then pass it to gdb:
 
 ```sh
 bazel run \
-  --platforms=@bazel_stm32//platform:lm3s6965evb \
+  --platforms=@cortex_m//platform:lm3s6965evb \
   --run_under=@@toolchains_arm_gnu++arm_toolchain+arm_none_eabi_darwin_arm64//:bin/arm-none-eabi-gdb \
   -c dbg \
   //minimal
@@ -14,8 +14,8 @@ In another terminal, run the target with qemu:
 
 ```sh
  bazel run \
-    --platforms=@bazel_stm32//platform:lm3s6965evb \
-    --run_under=@bazel_stm32//:qemu_runner \
+    --platforms=@cortex_m//platform:lm3s6965evb \
+    --run_under=@cortex_m//:qemu_runner \
     -c dbg \
     //minimal -- \
     -s -S

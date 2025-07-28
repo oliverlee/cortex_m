@@ -2,9 +2,9 @@ run with
 
 ```sh
 bazel run \
-  --platforms=@bazel_stm32//platform:lm3s6965evb \
-  --run_under=@bazel_stm32//:qemu_runner \
-  --@bazel_stm32//config:semihosting \
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  --run_under=@cortex_m//:qemu_runner \
+  --@cortex_m//config:semihosting \
   //semihosting:binary
 ```
 
@@ -12,14 +12,15 @@ or
 
 ```sh
 bazel run \
-  --platforms=@bazel_stm32//platform:lm3s6965evb \
-  --run_under=@bazel_stm32//:qemu_runner \
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  --run_under=@cortex_m//:qemu_runner \
   //semihosting:semihosting
 ```
+
 or
 
 ```sh
 bazel run \
-  --run_under=@bazel_stm32//:qemu_runner    \
+  --run_under=@cortex_m//:qemu_runner \
   //semihosting:semihosting.lm3s6965evb
 ```
