@@ -1,4 +1,4 @@
-load("@bazel_stm32//rules:transitions.bzl", "transition_config_binary")
+load("@cortex_m//rules:transitions.bzl", "transition_config_binary")
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 cc_binary(
@@ -7,7 +7,7 @@ cc_binary(
 )
 
 # `transition_config_binary` must be run with
-# `--run_under=@bazel_stm32//:qemu_runner` if using a non-host platform since we
+# `--run_under=@cortex_m//:qemu_runner` if using a non-host platform since we
 # cannot apply a transition to the `--run_under` option.
 
 transition_config_binary(
@@ -19,6 +19,6 @@ transition_config_binary(
 transition_config_binary(
     name = "semihosting.lm3s6965evb",
     src = ":binary",
-    platform = "@bazel_stm32//platform:lm3s6965evb",
+    platform = "@cortex_m//platform:lm3s6965evb",
     semihosting = "enabled",
 )

@@ -1,4 +1,4 @@
-Examples for building for stm32 with Bazel
+Tools for building and testing for Cortex-M with Bazel
 
 # building
 
@@ -6,9 +6,14 @@ An elf can be built for a target platform by specifying the platform
 
 ```sh
 bazel build \
-  --platforms=@stm32//platform:lm3s6965evb \
-  //example/minimal
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  <binary>
 ```
+
+where `<binary>` is a `cc_binary` target.
+
+Supported platforms provide generic startup code associated with the default
+registered toolchain.
 
 # running with `qemu`
 
@@ -17,21 +22,14 @@ to download the `qemu` package.
 
 ```sh
 bazel run \
-  --run_under=//:qemu_runner \
-  --platforms=//platform:lm3s6965evb \
-  //example/semihosting
+  --run_under=@cortex_m//:qemu_runner \
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  <binary> -- <qemu-args>
 ```
 
-By default, the QEMU runner accepts GDB connections on port 1234.
-
-If other options for `qemu` are necessary:
-
-```sh
-bazel run \
-  --run_under=//:qemu_runner \
-  --platforms=//platform:lm3s6965evb \
-  //example/semihosting -- <additional-args>
-```
+By default, the QEMU runner sets the machine to match the target platform.
+Additional arguments can be passed to `qemu-system-arm` after `--` (e.g., the
+GDB connection or to freeze CPU at startup).
 
 # enabling semihosting
 
@@ -40,21 +38,9 @@ with bool flag `--//config:semihosting`.
 
 ```sh
 bazel run \
-  --run_under=//:qemu_runner \
-  --platforms=//platform:lm3s6965evb \
-  --//config:semihosting \
-  //example/semihosting:binary
-```
-
-Alternatively, the `transition_semihosting_binary` can be used to transition a
-binary target to always enable or disable semihosting.
-
-```starlark
-transition_semihosting_binary(
-    name = "semihosting",
-    src = ":binary",
-    semihosting = "enabled",
-)
+  --run_under=@cortex_m//:qemu_runner \
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  --@cortex_m//config:semihosting
 ```
 
 # running tests with `qemu`
@@ -66,6 +52,32 @@ with `qemu-system-arm`.
 bazel test \
   --platforms=//platform:lm3s6965evb \
   --extra_toolchains=//:qemu_test_runner_toolchain \
-  --//config:semihosting \
   //...
+```
+
+# flagless builds
+
+`transition_config_binary` and `transition_config_test` can be used to
+transition a binary target to always enable or disable semihosting, set the
+target platform, and specify extra toolchains.
+
+```starlark
+load(
+    "@cortex_m//rules:transitions.bzl",
+    "transition_config_binary",
+    "transition_config_test",
+)
+
+transition_config_binary(
+    name = "binary",
+    src = ":_binary",
+    semihosting = "enabled",
+    platform = "@cortex_m//platform:lm3s6965evb",
+)
+
+transition_config_test(
+    name = "test",
+    src = ":_test",
+    platform = "@cortex_m//platform:lm3s6965evb",
+)
 ```
