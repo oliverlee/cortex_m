@@ -1,21 +1,66 @@
 module(name = "bazel_stm32")
 
 bazel_dep(
-    name = "toolchains_llvm",
-    dev_dependency = True,
-)
-bazel_dep(
     name = "toolchains_arm_gnu",
-    dev_dependency = True,
-)
-bazel_dep(
-    name = "platforms",
-    version = "1.0.0",
-    dev_dependency = True,
 )
 bazel_dep(
     name = "rules_cc",
     version = "0.1.3",
+)
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.7.1",
+)
+bazel_dep(
+    name = "platforms",
+    version = "1.0.0",
+)
+bazel_dep(
+    name = "rules_nixpkgs_core",
+    version = "0.13.0",
+)
+
+TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+
+archive_override(
+    module_name = "toolchains_arm_gnu",
+    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
+    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
+        commit = TOOLCHAINS_ARM_GNU_COMMIT,
+    ),
+    urls = [
+        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
+            commit = TOOLCHAINS_ARM_GNU_COMMIT,
+        ),
+    ],
+)
+
+arm_toolchain = use_extension(
+    "@toolchains_arm_gnu//:extensions.bzl",
+    "arm_toolchain",
+)
+arm_toolchain.arm_none_eabi(version = "13.2.1")
+use_repo(
+    arm_toolchain,
+    "arm_none_eabi",
+)
+
+register_toolchains(
+    "//toolchain:all",
+    "//:qemu_test_runner_toolchain",
+)
+
+flake_package_deps = use_extension(
+    "//:extensions.bzl",
+    "flake_package_deps",
+)
+use_repo(
+    flake_package_deps,
+    "qemu-system-arm",
+)
+
+bazel_dep(
+    name = "toolchains_llvm",
     dev_dependency = True,
 )
 bazel_dep(
@@ -47,16 +92,6 @@ bazel_dep(
     name = "hedron_compile_commands",
     dev_dependency = True,
 )
-bazel_dep(
-    name = "bazel_skylib",
-    version = "1.7.1",
-    dev_dependency = True,
-)
-bazel_dep(
-    name = "rules_nixpkgs_core",
-    version = "0.13.0",
-    dev_dependency = True,
-)
 
 TOOLCHAINS_LLVM_COMMIT = "f1048a300d0be607c7f5092e323bc15b7ef8d8af"
 
@@ -71,19 +106,17 @@ archive_override(
     )],
 )
 
-TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+HEDRON_COMPILE_COMMANDS_COMMIT = "4f28899228fb3ad0126897876f147ca15026151e"
 
 archive_override(
-    module_name = "toolchains_arm_gnu",
-    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
-    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
-        commit = TOOLCHAINS_ARM_GNU_COMMIT,
+    module_name = "hedron_compile_commands",
+    integrity = "sha256-ZYEiz7HyW+duohKwD16wR9jirci8+SO5GEYfKx43zfI=",
+    strip_prefix = "bazel-compile-commands-extractor-{commit}".format(
+        commit = HEDRON_COMPILE_COMMANDS_COMMIT,
     ),
-    urls = [
-        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
-            commit = TOOLCHAINS_ARM_GNU_COMMIT,
-        ),
-    ],
+    urls = ["https://github.com/hedronvision/bazel-compile-commands-extractor/archive/{commit}.tar.gz".format(
+        commit = HEDRON_COMPILE_COMMANDS_COMMIT,
+    )],
 )
 
 llvm = use_extension(
@@ -123,32 +156,7 @@ llvm.toolchain(
 )
 use_repo(llvm, "llvm_toolchain")
 
-arm_toolchain = use_extension("@toolchains_arm_gnu//:extensions.bzl", "arm_toolchain")
-arm_toolchain.arm_none_eabi(version = "13.2.1")
-use_repo(arm_toolchain, "arm_none_eabi")
-
 register_toolchains(
     "@llvm_toolchain//:all",
-    "//toolchain:all",
-    "//:qemu_test_runner_toolchain",
     dev_dependency = True,
-)
-
-flake_package_deps = use_extension("//:extensions.bzl", "flake_package_deps")
-use_repo(
-    flake_package_deps,
-    "qemu-system-arm",
-)
-
-HEDRON_COMPILE_COMMANDS_COMMIT = "4f28899228fb3ad0126897876f147ca15026151e"
-
-archive_override(
-    module_name = "hedron_compile_commands",
-    integrity = "sha256-ZYEiz7HyW+duohKwD16wR9jirci8+SO5GEYfKx43zfI=",
-    strip_prefix = "bazel-compile-commands-extractor-{commit}".format(
-        commit = HEDRON_COMPILE_COMMANDS_COMMIT,
-    ),
-    urls = ["https://github.com/hedronvision/bazel-compile-commands-extractor/archive/{commit}.tar.gz".format(
-        commit = HEDRON_COMPILE_COMMANDS_COMMIT,
-    )],
 )

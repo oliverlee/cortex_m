@@ -2,10 +2,10 @@ Build the target, then pass it to gdb:
 
 ```sh
 bazel run \
-  --platforms=//platform:lm3s6965evb \
+  --platforms=@bazel_stm32//platform:lm3s6965evb \
   --run_under=@@toolchains_arm_gnu++arm_toolchain+arm_none_eabi_darwin_arm64//:bin/arm-none-eabi-gdb \
   -c dbg \
-  //example/minimal
+  //minimal
 ```
 
 gdb is not yet connected to anything.
@@ -14,10 +14,10 @@ In another terminal, run the target with qemu:
 
 ```sh
  bazel run \
-    --platforms=//platform:lm3s6965evb \
-    --run_under=//:qemu_runner \
+    --platforms=@bazel_stm32//platform:lm3s6965evb \
+    --run_under=@bazel_stm32//:qemu_runner \
     -c dbg \
-    //example/minimal -- \
+    //minimal -- \
     -s -S
 ```
 

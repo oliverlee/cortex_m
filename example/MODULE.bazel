@@ -1,0 +1,35 @@
+module(name = "bazel-stm32_examples")
+
+bazel_dep(name = "bazel_stm32", dev_dependency = True)
+local_path_override(
+    module_name = "bazel_stm32",
+    path = "..",
+)
+
+bazel_dep(
+    name = "rules_cc",
+    version = "0.1.3",
+    dev_dependency = True,
+)
+
+# TODO toolchains_arm_gnu should be pulled in as a dependency after changes have
+# been merged upstream
+bazel_dep(
+    name = "toolchains_arm_gnu",
+    dev_dependency = True,
+)
+
+TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+
+archive_override(
+    module_name = "toolchains_arm_gnu",
+    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
+    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
+        commit = TOOLCHAINS_ARM_GNU_COMMIT,
+    ),
+    urls = [
+        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
+            commit = TOOLCHAINS_ARM_GNU_COMMIT,
+        ),
+    ],
+)
