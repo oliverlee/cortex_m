@@ -9,6 +9,28 @@ on:
   workflow_dispatch:
 
 jobs:
+  examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        compilation_mode:
+          - 'fastbuild'
+          - 'opt'
+        os:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/ci-env-setup
+      with:
+        buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+    - run: |
+        cd example
+        bazel build \
+          --compilation_mode=${{ matrix.compilation_mode }} \
+          //...
+
   test:
     strategy:
       fail-fast: false
@@ -46,6 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
+      - examples
       - test
       - format
     steps:

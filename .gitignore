@@ -1,5 +1,6 @@
 # ignore bazel build/test directories
 /bazel-*
+/example/bazel-*
 
 # ignore user local bazelrc
 /user.bazelrc

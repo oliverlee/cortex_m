@@ -2,24 +2,24 @@ run with
 
 ```sh
 bazel run \
-  --platforms=//platform:lm3s6965evb \
-  --run_under=//:qemu_runner \
-  --//config:semihosting \
-  //example/semihosting:binary
+  --platforms=@bazel_stm32//platform:lm3s6965evb \
+  --run_under=@bazel_stm32//:qemu_runner \
+  --@bazel_stm32//config:semihosting \
+  //semihosting:binary
 ```
 
 or
 
 ```sh
 bazel run \
-  --platforms=//platform:lm3s6965evb \
-  --run_under=//:qemu_runner \
-  //example/semihosting:semihosting
+  --platforms=@bazel_stm32//platform:lm3s6965evb \
+  --run_under=@bazel_stm32//:qemu_runner \
+  //semihosting:semihosting
 ```
 or
 
 ```sh
 bazel run \
-  --run_under=//:qemu_runner    \
-  //example/semihosting:semihosting.lm3s6965evb
+  --run_under=@bazel_stm32//:qemu_runner    \
+  //semihosting:semihosting.lm3s6965evb
 ```
