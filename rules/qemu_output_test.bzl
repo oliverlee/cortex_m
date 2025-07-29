@@ -10,9 +10,11 @@ def qemu_output_test(
         *,
         name,
         srcs,
-        expected_output,
         platform,
+        expected_stdout = None,
+        expected_stderr = None,
         local_defines = None,
+        copts = None,
         run_under = "//:qemu_runner",
         diff = "diff -u --color=always --strip-trailing-cr",
         **kwargs):
@@ -20,6 +22,7 @@ def qemu_output_test(
         name = name + ".binary",
         srcs = srcs,
         local_defines = local_defines,
+        copts = copts,
         tags = ["manual"],
         visibility = ["//visibility:private"],
     )
@@ -36,7 +39,8 @@ def qemu_output_test(
     binary_log_test(
         name = name,
         src = name + ".transition",
-        expected_stdout = expected_output,
+        expected_stdout = expected_stdout,
+        expected_stderr = expected_stderr,
         run_under = run_under,
         diff = diff,
         **kwargs

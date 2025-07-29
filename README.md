@@ -34,24 +34,27 @@ GDB connection or to freeze CPU at startup).
 # enabling semihosting
 
 By default, semihosting is not enabled when building targets. It can be enabled
-with bool flag `--//config:semihosting`.
+with bool flag `--@cortex_m//config:semihosting`.
 
 ```sh
 bazel run \
   --run_under=@cortex_m//:qemu_runner \
   --platforms=@cortex_m//platform:lm3s6965evb \
-  --@cortex_m//config:semihosting
+  --@cortex_m//config:semihosting \
+  <binary>
 ```
 
 # running tests with `qemu`
 
 `cc_test` targets can be built for the target platform and run under emulation
-with `qemu-system-arm`.
+with a CcTestRunner that uses `qemu-system-arm`. This runner is registered by
+default. Note that `--@cortex_m//config:semihosting` must be passed so that elf
+is built with semihosting enabled.
 
 ```sh
 bazel test \
-  --platforms=//platform:lm3s6965evb \
-  --extra_toolchains=//:qemu_test_runner_toolchain \
+  --platforms=@cortex_m//platform:lm3s6965evb \
+  --@cortex_m//config:semihosting \
   //...
 ```
 
