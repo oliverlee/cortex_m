@@ -6,7 +6,7 @@ load("//rules:qemu_runner.bzl", "qemu_runner")
         name = basename + "_test",
         size = "small",
         srcs = [basename + ".cpp"],
-        expected_output = basename + ".stdout",
+        expected_stdout = basename + ".stdout",
         platform = "//platform:lm3s6965evb",
     )
     for basename in [
@@ -26,7 +26,6 @@ load("//rules:qemu_runner.bzl", "qemu_runner")
             name = "failure_{}_test".format(exit_code),
             size = "small",
             srcs = ["failure.cpp"],
-            expected_output = None,
             local_defines = ["EXIT_CODE={}".format(exit_code)],
             platform = "//platform:lm3s6965evb",
             run_under = ":qemu_failure_runner_{}".format(exit_code),
@@ -39,3 +38,13 @@ load("//rules:qemu_runner.bzl", "qemu_runner")
         3,
     ]
 ]
+
+qemu_output_test(
+    name = "failing_assert_test",
+    size = "small",
+    srcs = ["failing_assert_test.cpp"],
+    copts = ["-UNDEBUG"],
+    expected_stderr = "failing_assert_test.stderr",
+    platform = "//platform:lm3s6965evb",
+    run_under = ":qemu_failure_runner_1",
+)
