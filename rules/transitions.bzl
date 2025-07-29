@@ -82,34 +82,39 @@ def _transition_config_binary_impl(ctx):
         if provider in target
     ]
 
-_common_attrs = {
-    "src": attr.label(
-        mandatory = True,
-        providers = [CcInfo],
-        doc = "The binary to transition",
-    ),
-    "semihosting": attr.string(
-        values = ["enabled", "disabled"],
-        doc = "Enable or disable semihosting or leave it unchanged if `None`",
-    ),
-    "platform": attr.label(
-        doc = "Target platform for the binary",
-    ),
-    "extra_toolchains": attr.label_list(
-        doc = "Extra toolchains to use with the binary",
-    ),
-    "_machine": attr.label(
-        default = "//config:machine",
-    ),
-    "_allowlist_function_transition": attr.label(
-        default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
-    ),
-}
+def _common_attrs(*, default = {}):
+    return {
+        "src": attr.label(
+            mandatory = True,
+            providers = [CcInfo],
+            default = default.get("src", None),
+            doc = "The binary to transition",
+        ),
+        "semihosting": attr.string(
+            values = ["enabled", "disabled"],
+            default = default.get("semihosting", ""),
+            doc = "Enable or disable semihosting or leave it unchanged if `None`",
+        ),
+        "platform": attr.label(
+            default = default.get("platform", None),
+            doc = "Target platform for the binary",
+        ),
+        "extra_toolchains": attr.label_list(
+            default = default.get("extra_toolchains", []),
+            doc = "Extra toolchains to use with the binary",
+        ),
+        "_machine": attr.label(
+            default = "//config:machine",
+        ),
+        "_allowlist_function_transition": attr.label(
+            default = "@bazel_tools//tools/allowlists/function_transition_allowlist",
+        ),
+    }
 
 transition_config_binary = rule(
     implementation = _transition_config_binary_impl,
     cfg = _config_transition,
-    attrs = _common_attrs,
+    attrs = _common_attrs(),
     executable = True,
     provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
 )
@@ -117,7 +122,12 @@ transition_config_binary = rule(
 transition_config_test = rule(
     implementation = _transition_config_binary_impl,
     cfg = _config_transition,
-    attrs = _common_attrs,
+    attrs = _common_attrs(
+        default = {
+            # semihosting should always be enabled for tests
+            "semihosting": "enabled",
+        },
+    ),
     test = True,
     provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
 )

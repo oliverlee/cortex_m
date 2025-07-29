@@ -18,6 +18,9 @@ cc_library(
         "//config:semihosting_disabled": [],
         "//config:semihosting_enabled": [
             "-specs=rdimon.specs",
+            # never garbage collect 'initialise_monitor_handles' when using
+            # semihosting
+            "-Wl,--undefined=initialise_monitor_handles",
         ],
     }),
     tags = ["manual"],
