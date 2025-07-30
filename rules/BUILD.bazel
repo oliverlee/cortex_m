@@ -1,0 +1,17 @@
+load(":qemu_runner.bzl", "qemu_runner")
+
+qemu_runner(
+    name = "qemu_semihosting_runner",
+    extra_args = ["-semihosting"],
+    visibility = ["//:__subpackages__"],
+)
+
+qemu_runner(
+    name = "qemu_gdb_runner",
+    extra_args = [
+        "-semihosting",
+        "-s",
+        "-S",
+    ],
+    visibility = ["//:__subpackages__"],
+)

@@ -1,4 +1,5 @@
 load("//rules:cc_test_runner_toolchain.bzl", "cc_test_runner_toolchain")
+load("//rules:gdb_qemu_runner.bzl", "gdb_qemu_runner")
 load("//rules:qemu_runner.bzl", "qemu_runner")
 
 xcode_config(name = "host_xcodes")
@@ -20,14 +21,14 @@ qemu_runner(
     visibility = ["//visibility:public"],
 )
 
-qemu_runner(
-    name = "qemu_semihosting_runner",
-    extra_args = ["-semihosting"],
+gdb_qemu_runner(
+    name = "gdb_qemu_runner",
+    visibility = ["//visibility:public"],
 )
 
 cc_test_runner_toolchain(
     name = "qemu_cc_test_runner_toolchain",
-    test_runner = ":qemu_semihosting_runner",
+    test_runner = "//rules:qemu_semihosting_runner",
 )
 
 toolchain(
