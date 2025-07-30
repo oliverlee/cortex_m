@@ -40,8 +40,6 @@ def _transition_config_binary_impl(ctx):
 
     binary = default_info.files_to_run.executable
     runfiles = default_info.default_runfiles
-    if default_info.data_runfiles:
-        runfiles = runfiles.merge(default_info.data_runfiles)
 
     out = ctx.actions.declare_file(ctx.label.name)
     ctx.actions.symlink(

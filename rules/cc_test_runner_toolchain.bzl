@@ -53,7 +53,6 @@ exec '{test_runner}' '{binary}' "$@"
         files
         for files in [
             test_runner[DefaultInfo].default_runfiles,
-            test_runner[DefaultInfo].data_runfiles,
         ]
         if files
     ])
