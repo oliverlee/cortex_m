@@ -1,5 +1,11 @@
 Tools for building and testing for Cortex-M with Bazel
 
+<details><summary>gif</summary>
+
+![usage](gifs/usage.gif)
+
+</details>
+
 # building
 
 An elf can be built for a target platform by specifying the platform
