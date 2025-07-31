@@ -280,16 +280,16 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
-    "//:extensions.bzl%flake_package_deps": {
+    "//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "uToz6ogmha1MmnSJD2LWP19n95ufS+n9RJlRHJamrpo=",
-        "usagesDigest": "8ZXTUdVibdyiDz3XODCSlSo2n3N3rzNiQyGwICz2vOc=",
+        "bzlTransitiveDigest": "YpD/p2YS9qYE8w6PMmYRnrWJ8+0A1ET4O5w0xuCGZdw=",
+        "usagesDigest": "mK4YgaAu5b/qaOsvCSv9KZ6YWfBZ1+idETueZeq0Zgw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
           "flake_copy": {
-            "repoRuleId": "@@//:extensions.bzl%_flake_copy",
+            "repoRuleId": "@@//extensions:flake_package_deps.bzl%_flake_copy",
             "attributes": {
               "flake_file": "@@//:flake.nix",
               "flake_lock_file": "@@//:flake.lock"
@@ -324,31 +324,20 @@
         ]
       }
     },
-    "//:extensions.bzl%local_workspace_config": {
+    "//extensions:local_config.bzl%local_config": {
       "general": {
-        "bzlTransitiveDigest": "uToz6ogmha1MmnSJD2LWP19n95ufS+n9RJlRHJamrpo=",
-        "usagesDigest": "iJh5aPlyOaTdwSlxs4m2YMebMaoCsKbc7aWKYZSJPtc=",
+        "bzlTransitiveDigest": "lXiw0WnsaJrqtPUaefFb4dUnim/xnEUzixEl6Cbo/r0=",
+        "usagesDigest": "//saaosASCR2S0r2P/a3C5Har9fM6gThaFuzeNvozu0=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
           "local_workspace_directories": {
-            "repoRuleId": "@@//:extensions.bzl%_local_workspace_directories",
+            "repoRuleId": "@@//extensions:local_config.bzl%_local_workspace_directories",
             "attributes": {}
           }
         },
-        "recordedRepoMappingEntries": [
-          [
-            "",
-            "rules_nixpkgs_core",
-            "rules_nixpkgs_core+"
-          ],
-          [
-            "rules_nixpkgs_core+",
-            "bazel_skylib",
-            "bazel_skylib+"
-          ]
-        ]
+        "recordedRepoMappingEntries": []
       }
     },
     "@@rules_kotlin+//src/main/starlark/core/repositories:bzlmod_setup.bzl%rules_kotlin_extensions": {
