@@ -24,3 +24,12 @@ bazel run \
   --run_under=@cortex_m//:qemu_runner \
   //semihosting:semihosting.lm3s6965evb
 ```
+
+or
+
+```sh
+bazel run \
+  --run_under=@cortex_m//:gdb_qemu_runner \
+  -c dbg \
+  //semihosting:semihosting.lm3s6965evb
+```

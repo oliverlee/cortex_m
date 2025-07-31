@@ -2,30 +2,10 @@
 run QEMU for a specific machine
 """
 
-load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
-
-_runfiles_init = """
-# --- begin runfiles.bash initialization v3 ---
-# Copy-pasted from the Bazel Bash runfiles library v3.
-set -uo pipefail; set +e; f=bazel_tools/tools/bash/runfiles/runfiles.bash
-# shellcheck disable=SC1090
-source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
-source "$(grep -sm1 "^$f " "${RUNFILES_MANIFEST_FILE:-/dev/null}" | cut -f2- -d' ')" 2>/dev/null || \
-source "$0.runfiles/$f" 2>/dev/null || \
-source "$(grep -sm1 "^$f " "$0.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-source "$(grep -sm1 "^$f " "$0.exe.runfiles_manifest" | cut -f2- -d' ')" 2>/dev/null || \
-{ echo>&2 "ERROR: cannot find $f"; exit 1; }; f=; set -e
-# --- end runfiles.bash initialization v3 ---
-"""
-
-def _config_from(attrs):
-    return struct(
-        semihosting = attrs._semihosting[BuildSettingInfo],
-        machine = attrs._machine[BuildSettingInfo].value,
-    )
+load("//rules/private:runner.bzl", "load_config", "rlpath", "runfiles_init")
 
 def _impl(ctx):
-    cfg = _config_from(ctx.attr)
+    cfg = load_config(ctx.attr)
 
     out = ctx.actions.declare_file(ctx.label.name)
 
@@ -48,7 +28,7 @@ set -euo pipefail
 if (($# == 0)); then
     echo "usage: bazel run {label} <binary> [additional-qemu-args...]"
     echo ""
-    echo "Run binary with QEMU {for_machine}"
+    echo "Run a binary with QEMU {for_machine}"
     echo ""
     echo "Arguments:"
     echo "  <binary>                  Path to the binary/ELF file to run"
@@ -73,7 +53,7 @@ args+=("${{@:2}}")
 exit_code=0
 $(rlocation {qemu_system_arm}) "${{args[@]}}" || exit_code=$?
 if ((exit_code != {exit_code})); then
-    printf "QEMU exited with \'$exit_code\' but " >&2
+    printf "ERROR: QEMU exited with \'$exit_code\' but " >&2
     printf "this runner expected '{exit_code}'\n" >&2
     exit 1
 fi
@@ -81,8 +61,8 @@ fi
             fixed_args = " ".join(fixed_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
             for_machine = ("for " + cfg.machine) if cfg.machine else "",
-            runfiles_init = _runfiles_init,
-            qemu_system_arm = "qemu-system-arm/qemu-system-arm",
+            runfiles_init = runfiles_init,
+            qemu_system_arm = rlpath(ctx.attr._qemu_system_arm),
             exit_code = ctx.attr.exit_code,
         ),
         is_executable = True,
