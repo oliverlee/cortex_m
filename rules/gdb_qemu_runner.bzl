@@ -1,5 +1,6 @@
 """Rules for running binaries in QEMU with GDB attached."""
 
+load("@local_workspace_directories//:defs.bzl", "BAZEL_OUTPUT_BASE", "BAZEL_WORKSPACE_ROOT")
 load("//rules/private:runner.bzl", "load_config", "rlpath", "runfiles_init")
 
 def _impl(ctx):
@@ -9,8 +10,10 @@ def _impl(ctx):
 
     gdb_args = (
         [
-            "-ex",
-            "'target remote :1234'",
+            "--silent",
+            "-directory=" + BAZEL_WORKSPACE_ROOT,
+            "-directory=" + BAZEL_OUTPUT_BASE,
+            "--eval-command='target remote :1234'",
         ] if ctx.attr.enable_default_args else []
     )
     gdb_args.extend(ctx.attr.extra_args)
@@ -46,7 +49,7 @@ runner_pid=$$
 return=$(mktemp)
 echo '0' > "$return"
 
-printf "INFO: starting QEMU runner process..." >&2
+echo "INFO: starting QEMU runner process..." >&2
 $(rlocation {qemu_runner}) "$binary" &
 qemu_pid=$!
 

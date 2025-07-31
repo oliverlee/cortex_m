@@ -143,7 +143,7 @@
   "moduleExtensions": {
     "@@cortex_m+//:extensions.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "YpD/p2YS9qYE8w6PMmYRnrWJ8+0A1ET4O5w0xuCGZdw=",
+        "bzlTransitiveDigest": "uToz6ogmha1MmnSJD2LWP19n95ufS+n9RJlRHJamrpo=",
         "usagesDigest": "jP4pfysBb2YlhI74AlbqX2lBnNIVcMVoXYxfB6m+JGs=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -169,6 +169,33 @@
               "fail_not_supported": true,
               "legacy_path_syntax": false
             }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "cortex_m+",
+            "rules_nixpkgs_core",
+            "rules_nixpkgs_core+"
+          ],
+          [
+            "rules_nixpkgs_core+",
+            "bazel_skylib",
+            "bazel_skylib+"
+          ]
+        ]
+      }
+    },
+    "@@cortex_m+//:extensions.bzl%local_workspace_config": {
+      "general": {
+        "bzlTransitiveDigest": "uToz6ogmha1MmnSJD2LWP19n95ufS+n9RJlRHJamrpo=",
+        "usagesDigest": "DCtBFbfhPYXQnC7QotxQK46NvyIbxzy2OCiTn5IziEk=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "local_workspace_directories": {
+            "repoRuleId": "@@cortex_m+//:extensions.bzl%_local_workspace_directories",
+            "attributes": {}
           }
         },
         "recordedRepoMappingEntries": [
