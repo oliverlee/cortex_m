@@ -42,29 +42,28 @@ binary="$1"
 args=({gdb_args})
 args+=("${{@:2}}")
 
-printf "INFO: Starting QEMU runner process..." >&2
+runner_pid=$$
+return=$(mktemp)
+echo '0' > "$return"
+
+printf "INFO: starting QEMU runner process..." >&2
 $(rlocation {qemu_runner}) "$binary" &
-QEMU_PID=$!
-echo "pid $QEMU_PID" >&2
+qemu_pid=$!
 
 {{
-  while true; do
-    if ! ps_stat=$(ps -p $QEMU_PID -o stat=); then
-      # QEMU process does not exist
-      kill -TERM $$ &> /dev/null
-      break
-    elif [[ $ps_stat == *Z* ]]; then
-      # QEMU process is a zombie
-      kill -TERM $$
-      break
-    else
-      sleep 0.1
-    fi
+  while ps_stat=$(ps -p $qemu_pid -o stat=) && [[ "$ps_stat" != *Z* ]]; do
+    sleep 0.1
   done
+
+  # QEMU process does not exist or is a zombie
+  echo '1' > "$return"
+  pkill -P $runner_pid
 }} &
 
-echo "INFO: Starting GDB..." >&2
-exec $(rlocation {arm_none_eabi_gdb}) "${{args[@]}}" "$binary"
+echo "INFO: starting GDB..." >&2
+$(rlocation {arm_none_eabi_gdb}) "${{args[@]}}" "$binary"
+
+exit $(cat "$return")
 """.format(
             gdb_args = " ".join(gdb_args),
             label = str(ctx.label).replace("@@", "@").replace("@//", "//"),
