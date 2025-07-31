@@ -59,6 +59,15 @@ use_repo(
     "qemu-system-arm",
 )
 
+local_workspace_config = use_extension(
+    "//:extensions.bzl",
+    "local_workspace_config",
+)
+use_repo(
+    local_workspace_config,
+    "local_workspace_directories",
+)
+
 bazel_dep(
     name = "toolchains_llvm",
     dev_dependency = True,
