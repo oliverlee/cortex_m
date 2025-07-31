@@ -51,7 +51,7 @@ register_toolchains(
 )
 
 flake_package_deps = use_extension(
-    "//:extensions.bzl",
+    "//extensions:flake_package_deps.bzl",
     "flake_package_deps",
 )
 use_repo(
@@ -59,12 +59,12 @@ use_repo(
     "qemu-system-arm",
 )
 
-local_workspace_config = use_extension(
-    "//:extensions.bzl",
-    "local_workspace_config",
+local_config = use_extension(
+    "//extensions:local_config.bzl",
+    "local_config",
 )
 use_repo(
-    local_workspace_config,
+    local_config,
     "local_workspace_directories",
 )
 
