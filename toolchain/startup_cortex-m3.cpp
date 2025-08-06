@@ -1,14 +1,19 @@
-// startup for Cortex-m3
+// startup for Cortex-M3
 //
-// Designed to be used with the `cortex-m3.ld` linker script.
+// Use with the `cortex-m3.ld` linker script.
 //
 // This file is heavily based on the example startup file from
 // rust-embedded/cortex-m
 // https://github.com/rust-embedded/cortex-m/blob/6d566b220b9fe1c8e67f7a6808bf105e3f01dc03/cortex-m-rt/src/lib.rs
 //
-// No support for:
+// There is no support for:
 // - Dynamic memory allocation (no heap)
 // - C++ exceptions (no unwinding tables)
+//
+// Targets should be built with `-fno-exceptions`.
+//
+// Additionally, `-fno-use-cxa-atexit` should be used to avoid dynamic
+// destructor registration -- all destructors should be known at compile time.
 
 #include <algorithm>
 #include <array>
@@ -128,33 +133,6 @@ auto _exit(int ec) -> void
   __builtin_unreachable();
 }
 
-template <std::size_t N, auto value>
-constexpr auto repeat = [] {
-  std::array<decltype(value), N> arr{};
-  arr.fill(value);
-  return arr;
-}();
-
-using vector_table_entry_t = auto (*)() -> void;
-
-struct vector_table_t
-{
-  const void* initial_stack_pointer;              // Initial stack pointer value
-  vector_table_entry_t reset;                     // Reset handler
-  vector_table_entry_t nmi;                       // NMI handler
-  vector_table_entry_t hard_fault;                // Hard fault handler
-  vector_table_entry_t memory_management;         // Memory management fault
-  vector_table_entry_t bus_fault;                 // Bus fault
-  vector_table_entry_t usage_fault;               // Usage fault
-  std::array<vector_table_entry_t, 4> reserved1;  // Reserved entries
-  vector_table_entry_t svc;                       // Supervisor call
-  vector_table_entry_t debug_monitor;             // Debug monitor
-  vector_table_entry_t reserved2;                 // Reserved
-  vector_table_entry_t pendsv;                    // Pendable service call
-  vector_table_entry_t systick;                   // System tick timer
-  std::array<vector_table_entry_t, 240> irq;      // External interrupts
-};
-
 }  // namespace
 
 extern "C" [[noreturn]]
@@ -270,23 +248,29 @@ auto default_handler() -> void
 }
 }
 
-[[gnu::section(".vector_table"), gnu::used]]
-const auto vector_table = vector_table_t{
-    .initial_stack_pointer = _stack_start,
-    .reset = reset_handler,
-    .nmi = nmi_handler,
-    .hard_fault = hardfault_trampoline,
-    .memory_management = memory_management_handler,
-    .bus_fault = bus_fault_handler,
-    .usage_fault = usage_fault_handler,
-    .reserved1 = {},
-    .svc = svcall_handler,
-    .debug_monitor = debug_monitor_handler,
-    .reserved2 = {},
-    .pendsv = pendsv_handler,
-    .systick = systick_handler,
-    .irq = repeat<240, default_handler>
-};
+[[gnu::section(".vector_table"), gnu::used]] const struct
+{
+  using handler_type = auto (*)() -> void;
+
+  const void* initial_stack_pointer = _stack_start;
+  handler_type reset = reset_handler;
+  handler_type nmi = nmi_handler;
+  handler_type hard_fault = hardfault_trampoline;
+  handler_type memory_management = memory_management_handler;
+  handler_type bus_fault = bus_fault_handler;
+  handler_type usage_fault = usage_fault_handler;
+  std::array<handler_type, 4> reserved1 = {};
+  handler_type svc = svcall_handler;
+  handler_type debug_monitor = debug_monitor_handler;
+  handler_type reserved2 = {};
+  handler_type pendsv = pendsv_handler;
+  handler_type systick = systick_handler;
+  std::array<handler_type, 240> irq = [] {
+    auto arr = std::array<handler_type, 240>{};
+    arr.fill(default_handler);
+    return arr;
+  }();
+} vector_table{};
 
 asm(R"(
 .section .Reset, "ax"

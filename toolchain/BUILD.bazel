@@ -20,7 +20,7 @@ cc_library(
             "-specs=rdimon.specs",
             # never garbage collect 'initialise_monitor_handles' when using
             # semihosting
-            "-Wl,--undefined=initialise_monitor_handles",
+            "-Wl,--require-defined=initialise_monitor_handles",
         ],
     }),
     tags = ["manual"],
