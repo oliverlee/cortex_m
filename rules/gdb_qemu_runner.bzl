@@ -66,6 +66,8 @@ qemu_pid=$!
 echo "INFO: starting GDB..." >&2
 $(rlocation {arm_none_eabi_gdb}) "${{args[@]}}" "$binary"
 
+pkill -P $qemu_pid
+
 exit $(cat "$return")
 """.format(
             gdb_args = " ".join(gdb_args),
