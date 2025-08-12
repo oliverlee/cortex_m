@@ -3,7 +3,7 @@ Build the target, then pass it to gdb:
 ```sh
 bazel run \
   --platforms=@cortex_m//platform:lm3s6965evb \
-  --run_under=@@toolchains_arm_gnu++arm_toolchain+arm_none_eabi_darwin_arm64//:bin/arm-none-eabi-gdb \
+  --run_under=@cortex_m//:gdb \
   -c dbg \
   //minimal
 ```

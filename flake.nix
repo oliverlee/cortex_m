@@ -16,7 +16,7 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in {
-        inherit (pkgs) qemu;
+        inherit (pkgs) gdb qemu;
       }
     );
   };

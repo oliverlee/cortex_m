@@ -34,6 +34,18 @@ _flake_copy = repository_rule(
     ),
 )
 
+def _native_binary_build_file_content(binary):
+    return """
+load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+
+native_binary(
+    name = "{binary}",
+    out = "{binary}",
+    src = "bin/{binary}",
+    visibility = ["//visibility:public"],
+)
+""".format(binary = binary)
+
 def _flake_package_deps_impl(_mctx):
     _flake_copy(
         name = "flake_copy",
@@ -46,16 +58,15 @@ def _flake_package_deps_impl(_mctx):
         nix_flake_file = "@flake_copy//:flake.nix",
         nix_flake_lock_file = "@flake_copy//:flake.lock",
         package = "qemu",
-        build_file_content = """
-load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+        build_file_content = _native_binary_build_file_content("qemu-system-arm"),
+    )
 
-native_binary(
-    name = "qemu-system-arm",
-    out = "qemu-system-arm",
-    src = "bin/qemu-system-arm",
-    visibility = ["//visibility:public"],
-)
-""",
+    nixpkgs_flake_package(
+        name = "gdb",
+        nix_flake_file = "@flake_copy//:flake.nix",
+        nix_flake_lock_file = "@flake_copy//:flake.lock",
+        package = "gdb",
+        build_file_content = _native_binary_build_file_content("gdb"),
     )
 
 flake_package_deps = module_extension(

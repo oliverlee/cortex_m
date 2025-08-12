@@ -16,6 +16,18 @@ filegroup(
     visibility = [":__subpackages__"],
 )
 
+alias(
+    name = "gdb",
+    actual = "@gdb",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "qemu-system-arm",
+    actual = "@qemu-system-arm",
+    visibility = ["//visibility:public"],
+)
+
 qemu_runner(
     name = "qemu_runner",
     visibility = ["//visibility:public"],
