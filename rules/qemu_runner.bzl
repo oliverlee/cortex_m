@@ -14,7 +14,7 @@ def _impl(ctx):
         "-monitor stdio",
     ] if ctx.attr.enable_default_args else []
     if cfg.semihosting:
-        fixed_args.append("-semihosting")
+        fixed_args.append("-semihosting-config enable=on,target=auto")
     if cfg.machine:
         fixed_args.append("-machine " + cfg.machine)
     fixed_args.extend(ctx.attr.extra_args)
@@ -37,7 +37,7 @@ if (($# == 0)); then
     echo "Examples:"
     echo "  bazel run {label} <binary>"
     echo "  bazel run {label} <binary> -S"
-    echo "  bazel run {label} <binary> -semihosting"
+    echo "  bazel run {label} <binary> -semihosting-config enable=on,target=auto"
     exit 1
 fi
 

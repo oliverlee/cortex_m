@@ -84,7 +84,6 @@ def _common_attrs(*, default = {}):
     return {
         "src": attr.label(
             mandatory = True,
-            providers = [CcInfo],
             default = default.get("src", None),
             doc = "The binary to transition",
         ),
@@ -114,7 +113,7 @@ transition_config_binary = rule(
     cfg = _config_transition,
     attrs = _common_attrs(),
     executable = True,
-    provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
+    provides = [DefaultInfo, RunEnvironmentInfo],
 )
 
 transition_config_test = rule(
@@ -127,5 +126,5 @@ transition_config_test = rule(
         },
     ),
     test = True,
-    provides = [DefaultInfo, RunEnvironmentInfo, CcInfo],
+    provides = [DefaultInfo, RunEnvironmentInfo],
 )

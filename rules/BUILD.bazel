@@ -1,17 +1,31 @@
 load(":qemu_runner.bzl", "qemu_runner")
+load(":transitions.bzl", "transition_config_binary")
 
-qemu_runner(
-    name = "qemu_semihosting_runner",
-    extra_args = ["-semihosting"],
-    visibility = ["//:__subpackages__"],
-)
-
-qemu_runner(
-    name = "qemu_gdb_runner",
-    extra_args = [
-        "-semihosting",
-        "-s",
-        "-S",
-    ],
-    visibility = ["//:__subpackages__"],
-)
+[
+    (
+        qemu_runner(
+            name = "_" + name,
+            extra_args = extra_args,
+            visibility = ["//visibility:private"],
+        ),
+        transition_config_binary(
+            name = name,
+            src = "_" + name,
+            semihosting = "enabled",
+            visibility = ["//:__subpackages__"],
+        ),
+    )
+    for name, extra_args in [
+        (
+            "qemu_semihosting_runner",
+            None,
+        ),
+        (
+            "qemu_gdb_runner",
+            [
+                "-S",
+                "-s",
+            ],
+        ),
+    ]
+]

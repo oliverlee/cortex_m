@@ -20,7 +20,6 @@ load("//rules:qemu_runner.bzl", "qemu_runner")
         qemu_runner(
             name = "qemu_failure_runner_{}".format(exit_code),
             exit_code = exit_code,
-            extra_args = ["-semihosting"],
         ),
         qemu_output_test(
             name = "failure_{}_test".format(exit_code),
