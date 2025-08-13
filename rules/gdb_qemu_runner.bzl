@@ -64,7 +64,7 @@ qemu_pid=$!
 }} &
 
 echo "INFO: starting GDB..." >&2
-$(rlocation {arm_none_eabi_gdb}) "${{args[@]}}" "$binary"
+$(rlocation {gdb}) "${{args[@]}}" "$binary"
 
 pkill -P $qemu_pid
 
@@ -75,7 +75,7 @@ exit $(cat "$return")
             for_machine = ("for " + cfg.machine) if cfg.machine else "",
             runfiles_init = runfiles_init,
             qemu_runner = rlpath(ctx.attr.qemu_runner),
-            arm_none_eabi_gdb = rlpath(ctx.attr._arm_none_eabi_gdb),
+            gdb = rlpath(ctx.attr._gdb),
         ),
         is_executable = True,
     )
@@ -86,12 +86,12 @@ exit $(cat "$return")
             runfiles = ctx.runfiles(
                 transitive_files = depset(transitive = [
                     ctx.attr.qemu_runner.files,
-                    ctx.attr._arm_none_eabi_gdb.files,
+                    ctx.attr._gdb.files,
                     ctx.attr._runfiles.files,
                 ]),
             ).merge_all([
                 ctx.attr.qemu_runner[DefaultInfo].default_runfiles,
-                ctx.attr._arm_none_eabi_gdb[DefaultInfo].default_runfiles,
+                ctx.attr._gdb[DefaultInfo].default_runfiles,
             ]),
         ),
         RunEnvironmentInfo(
@@ -119,8 +119,8 @@ gdb_qemu_runner = rule(
             executable = True,
             cfg = "exec",
         ),
-        "_arm_none_eabi_gdb": attr.label(
-            default = "@arm_none_eabi//:gdb",
+        "_gdb": attr.label(
+            default = "@gdb",
             allow_single_file = True,
             executable = True,
             cfg = "exec",

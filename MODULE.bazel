@@ -56,6 +56,7 @@ flake_package_deps = use_extension(
 )
 use_repo(
     flake_package_deps,
+    "gdb",
     "qemu-system-arm",
 )
 
