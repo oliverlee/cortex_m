@@ -282,7 +282,7 @@
   "moduleExtensions": {
     "//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "qpotQnfiL254H10XNdJjWy5E2TXC9q2agaNph+eRMbY=",
+        "bzlTransitiveDigest": "lWqARdha1cufgReuIOrWdVn7owprGC5EoSSvIVt7PxE=",
         "usagesDigest": "mK4YgaAu5b/qaOsvCSv9KZ6YWfBZ1+idETueZeq0Zgw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -291,8 +291,8 @@
           "flake_copy": {
             "repoRuleId": "@@//extensions:flake_package_deps.bzl%_flake_copy",
             "attributes": {
-              "flake_file": "@@//:flake.nix",
-              "flake_lock_file": "@@//:flake.lock"
+              "flake_file": "@@//extensions:flake.nix",
+              "flake_lock_file": "@@//extensions:flake.lock"
             }
           },
           "qemu-system-arm": {
