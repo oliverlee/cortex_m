@@ -49,8 +49,8 @@ native_binary(
 def _flake_package_deps_impl(_mctx):
     _flake_copy(
         name = "flake_copy",
-        flake_file = "//:flake.nix",
-        flake_lock_file = "//:flake.lock",
+        flake_file = "//extensions:flake.nix",
+        flake_lock_file = "//extensions:flake.lock",
     )
 
     nixpkgs_flake_package(

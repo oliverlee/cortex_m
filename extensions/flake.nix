@@ -1,5 +1,5 @@
 {
-  description = "flake containing packages used by Bazel";
+  description = "flake containing packages used by repo extensions";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
