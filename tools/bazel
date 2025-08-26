@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-exec nix -vv run "path:${BASH_SOURCE[0]%/bazel}" -- "$@"
+GIT_ROOT="${BASH_SOURCE[0]%tools/bazel}"
+exec nix -vv run "git+file://${GIT_ROOT}?dir=tools/bazel-wrapper" -- "$@"
