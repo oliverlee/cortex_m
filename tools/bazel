@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# This script is similar in nature to
+# https://bytes.zone/posts/nix-script/
+#
+# Since the shell application in tools/bazel-wrapper/flake.nix only depends on
+# Nix packages to provide binaries, this list rarely changes, and does not
+# depend on any other files -- we can "cache" the derivation by hashing the
+# tools/bazel-wrapper directory.
+
+workspace_root="${BASH_SOURCE[0]%/tools/bazel}"
+bazel_wrapper="${workspace_root}/tools/bazel-wrapper"
+
+# this is much faster than using 'nix hash'
+bazel_wrapper_hash=$(cat "${bazel_wrapper}"/* | sha1sum | cut -d' ' -f1)
+
+hashed_out_link="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
+
+if [[ ! -e "$hashed_out_link" ]]; then
+    rm -rf "${workspace_root}/.bazel-wrapper"
+    store_path=$(
+      nix \
+        --option warn-dirty false \
+        build \
+        --verbose \
+        --out-link "$hashed_out_link" \
+        --print-out-paths \
+        "path:$bazel_wrapper"
+    )
+    echo "caching store path $store_path to $hashed_out_link"
+fi
+
+exec "$hashed_out_link/bin/bazel-wrapper" "$@"
