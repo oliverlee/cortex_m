@@ -94,6 +94,11 @@ bazel_dep(
     dev_dependency = True,
 )
 bazel_dep(
+    name = "rules_python",
+    version = "1.5.3",
+    dev_dependency = True,
+)
+bazel_dep(
     name = "rules_shell",
     version = "0.4.1",
     dev_dependency = True,
@@ -170,3 +175,11 @@ register_toolchains(
     "@llvm_toolchain//:all",
     dev_dependency = True,
 )
+
+python = use_extension(
+    "@rules_python//python/extensions:python.bzl",
+    "python",
+    dev_dependency = True,
+)
+python.defaults(python_version = "3.11")
+python.toolchain(python_version = "3.11")
