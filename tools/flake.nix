@@ -12,7 +12,7 @@
     systems = ["x86_64-linux" "aarch64-darwin"];
     forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
   in {
-    devShells = forAllSystems (
+    packages = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
         tools = with pkgs;
@@ -27,13 +27,24 @@
           ++ lib.optionals stdenv.isDarwin [
             darwin.cctools
           ];
-      in {
-        default = pkgs.mkShellNoCC {
-          packages = tools;
-
-          shellHook = ''
+        bazelWrapper = pkgs.writeShellApplication {
+          name = "bazel-wrapper";
+          runtimeInputs = tools;
+          text = ''
             export PATH="${pkgs.lib.makeBinPath tools}"
+            exec bazelisk "$@"
           '';
+        };
+      in {
+        default = bazelWrapper;
+      }
+    );
+
+    apps = forAllSystems (
+      system: {
+        default = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/bazel-wrapper";
         };
       }
     );

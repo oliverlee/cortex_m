@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-exec nix develop "path:${BASH_SOURCE[0]%/bazel}" -c bazelisk "$@"
+exec nix -vv run "path:${BASH_SOURCE[0]%/bazel}" -- "$@"
