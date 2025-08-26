@@ -2,4 +2,4 @@
 set -euo pipefail
 
 GIT_ROOT="${BASH_SOURCE[0]%tools/bazel}"
-exec nix -vv run "git+file://${GIT_ROOT}?dir=tools/bazel-wrapper" -- "$@"
+exec nix run ${NIX_OPTS:-} "git+file://${GIT_ROOT}?dir=tools/bazel-wrapper" -- "$@"
