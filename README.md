@@ -90,3 +90,8 @@ transition_config_test(
     platform = "@cortex_m//platform:lm3s6965evb",
 )
 ```
+
+# developing
+
+Developing requires `bash`, `nix`, and coreutils on the `$PATH` to bootstrap
+the Nix shell application used in `tools/bazel`.

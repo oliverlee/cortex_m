@@ -4,3 +4,6 @@
 
 # ignore user local bazelrc
 /user.bazelrc
+
+# ignore Nix out links to dev shell application
+/.bazel-wrapper/
