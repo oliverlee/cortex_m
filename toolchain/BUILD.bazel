@@ -27,6 +27,26 @@ cc_library(
     alwayslink = True,
 )
 
+_warning_opts = [
+    "-Werror",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wnon-virtual-dtor",
+    "-Wold-style-cast",
+    "-Wcast-align",
+    "-Wunused",
+    "-Woverloaded-virtual",
+    "-Wmisleading-indentation",
+    "-Wnull-dereference",
+    "-Wdouble-promotion",
+    "-Wformat=2",
+    "-Wimplicit-fallthrough",
+    "-Wextra-semi",
+    "-Wunreachable-code",
+]
+
 [
     arm_none_eabi_toolchain(
         name = "{board}_toolchain".format(board = board.name),
@@ -34,42 +54,15 @@ cc_library(
             "//board/{board}:memory_region".format(board = board.name),
             ":start_{cpu}".format(cpu = board.cpu),
         ],
-        copts = [
-            "-mcpu={cpu}".format(cpu = board.cpu),
-            "-mthumb",
-            "-mfloat-abi=soft",
+        copts = common_opts + [
             "-fdiagnostics-color",
-            "-fno-exceptions",
             "-fno-use-cxa-atexit",
-            "-specs=nano.specs",
-            "-Werror",
-            "-Wall",
-            "-Wextra",
-            "-Wpedantic",
-            "-Wconversion",
-            "-Wnon-virtual-dtor",
-            "-Wold-style-cast",
-            "-Wcast-align",
-            "-Wunused",
-            "-Woverloaded-virtual",
-            "-Wmisleading-indentation",
-            "-Wnull-dereference",
-            "-Wdouble-promotion",
-            "-Wformat=2",
-            "-Wimplicit-fallthrough",
-            "-Wextra-semi",
-            "-Wunreachable-code",
         ],
-        cxxopts = [
+        cxxopts = _warning_opts + [
             "-std=c++20",
             "-ffreestanding",
         ],
-        linkopts = [
-            "-mcpu={cpu}".format(cpu = board.cpu),
-            "-mthumb",
-            "-mfloat-abi=soft",
-            "-fno-exceptions",
-            "-specs=nano.specs",
+        linkopts = common_opts + [
             "-Wl,--gc-sections",
             "-Wl,--fatal-warnings",
         ],
@@ -80,5 +73,17 @@ cc_library(
         ],
         visibility = ["//visibility:public"],
     )
-    for board in BOARDS
+    for board, common_opts in [
+        (
+            board,
+            [
+                "-mcpu={cpu}".format(cpu = board.cpu),
+                "-mthumb",
+                "-mfloat-abi=soft",
+                "-fno-exceptions",
+                "-specs=nano.specs",
+            ],
+        )
+        for board in BOARDS
+    ]
 ]

@@ -20,16 +20,16 @@ bazel_dep(
     version = "0.13.0",
 )
 
-TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+TOOLCHAINS_ARM_GNU_COMMIT = "1abff3e6a5f894d0545654800ee0db6ea24a76a3"
 
 archive_override(
     module_name = "toolchains_arm_gnu",
-    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
-    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
+    integrity = "sha256-surv16TjyDtSebSX8fdj85TVnC8wGjIthEk3uHlKvFs=",
+    strip_prefix = "toolchains_arm_gnu-{commit}".format(
         commit = TOOLCHAINS_ARM_GNU_COMMIT,
     ),
     urls = [
-        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
+        "https://github.com/hexdae/toolchains_arm_gnu/archive/{commit}.tar.gz".format(
             commit = TOOLCHAINS_ARM_GNU_COMMIT,
         ),
     ],
@@ -46,7 +46,7 @@ use_repo(
 )
 
 register_toolchains(
-    "//toolchain:all",
+    "//toolchain:lm3s6965evb_toolchain",
     "//:qemu_test_runner_toolchain",
 )
 
