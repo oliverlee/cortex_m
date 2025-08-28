@@ -108,11 +108,11 @@ bazel_dep(
     dev_dependency = True,
 )
 
-TOOLCHAINS_LLVM_COMMIT = "f1048a300d0be607c7f5092e323bc15b7ef8d8af"
+TOOLCHAINS_LLVM_COMMIT = "7cfc09dffd1305bc05916b6b24352583f3d790a9"
 
 archive_override(
     module_name = "toolchains_llvm",
-    integrity = "sha256-g9hKi+nAtM1ddbK9Ppkrx8LyY7K/Op3vSwopp2Kh85Y=",
+    integrity = "sha256-pxExoYkhpv6w3Lu9PJV4eqRAO9mxv8eI05L3T2lxPvU=",
     strip_prefix = "toolchains_llvm-{commit}".format(
         commit = TOOLCHAINS_LLVM_COMMIT,
     ),
