@@ -26,6 +26,7 @@ common:remote-cache --experimental_profile_include_target_label
 common:remote-cache --legacy_important_outputs=false
 
 common --@rules_python//python/config_settings:bootstrap_impl=script
+common --experimental_repository_cache_hardlinks
 
 build --@bazel_clang_format//:binary=@llvm_toolchain//:clang-format
 build --@bazel_clang_format//:config=//:format-config
