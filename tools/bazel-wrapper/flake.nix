@@ -20,14 +20,19 @@
             bash
             bazelisk
             coreutils
+            diffutils
             findutils
             gnugrep
+            gnused
             nix
           ]
           ++ lib.optionals stdenv.isDarwin [
             darwin.cctools
           ];
       in {
+        shellExecutable = pkgs.writeText
+          "shell_executable.bazelrc"
+          "common --shell_executable ${pkgs.lib.getExe pkgs.bash}";
         default = pkgs.writeShellApplication {
           name = "bazel-wrapper";
           runtimeInputs = tools;

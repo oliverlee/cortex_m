@@ -3,6 +3,7 @@ load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile
 load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
 load("@rules_multirun//:defs.bzl", "multirun")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 
 buildifier(
     name = "buildifier.check",
@@ -20,7 +21,7 @@ genrule(
     name = "gen-clang-format",
     outs = ["clang-format.bash"],
     cmd = """
-echo "#!/bin/bash" > $@
+echo "#!/usr/bin/env bash" > $@
 echo "cd \\$$BUILD_WORKSPACE_DIRECTORY" >> $@
 echo "exec bazelisk build \\$$@ //..." >> $@
 """,
@@ -67,7 +68,7 @@ genrule(
     name = "gen-clang-tidy",
     outs = ["clang-tidy.bash"],
     cmd = """
-echo "#!/bin/bash" > $@
+echo "#!/usr/bin/env bash" > $@
 echo "cd \\$$BUILD_WORKSPACE_DIRECTORY" >> $@
 echo "exec bazelisk build {options} \\$${{@:-//...}}" >> $@
 """.format(
@@ -105,4 +106,25 @@ refresh_compile_commands(
     targets = {
         "//...": "--extra_toolchains=@llvm_toolchain//:all",
     },
+)
+
+genrule(
+    name = "actual_bazelrc",
+    outs = ["actual.bazelrc"],
+    srcs = [
+      "bazel-wrapper/flake.nix",
+      "bazel-wrapper/flake.lock",
+    ],
+    cmd = """
+      mkdir nix
+      cp -L ./tools/bazel-wrapper/flake.nix ./tools/bazel-wrapper/flake.lock ./nix
+      file=$$(nix build ./nix#shellExecutable --print-out-paths)
+      cp "$$file" $@
+    """,
+)
+
+diff_test(
+    name = "shell_executable.bazelrc_diff_test",
+    file1 = "shell_executable.bazelrc",
+    file2 = ":actual_bazelrc",
 )
