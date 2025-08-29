@@ -27,11 +27,11 @@ def _binary_log_impl(ctx):
 
     env = env | ctx.attr.env
 
-    ctx.actions.run_shell(
-        outputs = [stdout, stderr],
-        inputs = [ctx.executable.src],
-        tools = runner_exe,
-        command = """
+    runner_wrapper = ctx.actions.declare_file(ctx.label.name + ".runner")
+    ctx.actions.write(
+        output = runner_wrapper,
+        is_executable = True,
+        content = """
 #!/usr/bin/env bash
 set -uo pipefail
 
@@ -65,6 +65,13 @@ exit $exit_code
                 runner = '"$4" ' if runner else "",
             ),
         ),
+    )
+
+    ctx.actions.run(
+        outputs = [stdout, stderr],
+        inputs = [ctx.executable.src],
+        tools = runner_exe,
+        executable = runner_wrapper,
         arguments = [
             ctx.executable.src.path,
             stdout.path,
