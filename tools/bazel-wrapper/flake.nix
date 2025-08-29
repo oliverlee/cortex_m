@@ -22,6 +22,7 @@
             coreutils
             findutils
             gnugrep
+            gnused
             nix
           ]
           ++ lib.optionals stdenv.isDarwin [
