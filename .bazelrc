@@ -16,6 +16,8 @@ common --enable_platform_specific_config
 common:remote-cache --bes_results_url=https://oliverlee.buildbuddy.io/invocation/
 common:remote-cache --bes_backend=grpcs://oliverlee.buildbuddy.io
 common:remote-cache --remote_cache=grpcs://oliverlee.buildbuddy.io
+common:remote-cache --remote_instance_name=cortex_m-instance-0
+common:remote-cache --remote_header=x-buildbuddy-api-key=khiIK9lMQtIp1BztvPQE
 common:remote-cache --remote_timeout=10m
 common:remote-cache --remote_build_event_upload=minimal
 common:remote-cache --remote_download_outputs=minimal
