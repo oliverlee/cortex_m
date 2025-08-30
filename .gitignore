@@ -7,3 +7,6 @@
 
 # ignore Nix out links to dev shell application
 /.bazel-wrapper/
+
+# ignore NixOS specific bazelrc
+/.nixos-autoconfig/

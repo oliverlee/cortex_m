@@ -18,17 +18,35 @@ bazel_wrapper_hash=$(cat "${bazel_wrapper}"/* | sha1sum | cut -d' ' -f1)
 hashed_out_link="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
 
 if [[ ! -e "$hashed_out_link" ]]; then
-    rm -rf "${workspace_root}/.bazel-wrapper"
-    store_path=$(
-      nix \
-        --option warn-dirty false \
-        build \
-        --verbose \
-        --out-link "$hashed_out_link" \
-        --print-out-paths \
-        "path:$bazel_wrapper"
-    )
-    echo "caching store path $store_path to $hashed_out_link"
+  rm -rf "${workspace_root}/.bazel-wrapper"
+  store_path=$(
+    nix \
+      --option warn-dirty false \
+      build \
+      --verbose \
+      --out-link "$hashed_out_link" \
+      --print-out-paths \
+      "path:$bazel_wrapper"
+  )
+  echo "cached store path $store_path to $hashed_out_link"
+fi
+
+# NixOS doesn't have /bin/bash so we need to set --shell_executable
+nixos_bazelrc_dir="${workspace_root}/.nixos-autoconfig"
+if [[ ! -e /bin/bash && ! -e "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" ]]; then
+  echo "generating/updating nixos specific bazelrc"
+
+  rm -rf "$nixos_bazelrc_dir"
+  nix \
+    --option warn-dirty false \
+    build \
+    --verbose \
+    --out-link "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" \
+    "path:${bazel_wrapper}#nixos-bazelrc"
+  cat > ${nixos_bazelrc_dir}/bazelrc << EOF
+import %workspace%/.nixos-autoconfig/${bazel_wrapper_hash}
+EOF
+    
 fi
 
 exec "$hashed_out_link/bin/bazel-wrapper" "$@"
