@@ -22,6 +22,7 @@ exports_files(["flake.nix", "flake.lock"])
 """,
         executable = False,
     )
+    rctx.repo_metadata(reproducible = True)
 
 _flake_copy = repository_rule(
     implementation = _flake_copy_impl,
@@ -34,41 +35,69 @@ _flake_copy = repository_rule(
     ),
 )
 
-def _native_binary_build_file_content(binary):
+def _native_binary_build_file_content(binary, *, package = None):
     return """
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 
 native_binary(
-    name = "{binary}",
+    name = "{package}",
     out = "{binary}",
     src = "bin/{binary}",
     visibility = ["//visibility:public"],
 )
-""".format(binary = binary)
+""".format(
+        binary = binary,
+        package = package or binary,
+    )
 
-def _flake_package_deps_impl(_mctx):
+def _provide_binary(pkgs):
     _flake_copy(
         name = "flake_copy",
         flake_file = "//extensions:flake.nix",
         flake_lock_file = "//extensions:flake.lock",
     )
 
-    nixpkgs_flake_package(
-        name = "qemu-system-arm",
-        nix_flake_file = "@flake_copy//:flake.nix",
-        nix_flake_lock_file = "@flake_copy//:flake.lock",
-        package = "qemu",
-        build_file_content = _native_binary_build_file_content("qemu-system-arm"),
-    )
+    for package in pkgs:
+        if type(package) != "dict":
+            package = {"name": package}
 
-    nixpkgs_flake_package(
-        name = "gdb",
-        nix_flake_file = "@flake_copy//:flake.nix",
-        nix_flake_lock_file = "@flake_copy//:flake.lock",
-        package = "gdb",
-        build_file_content = _native_binary_build_file_content("gdb"),
-    )
+        defaults = {
+            "nix_flake_file": "@flake_copy//:flake.nix",
+            "nix_flake_lock_file": "@flake_copy//:flake.lock",
+            "package": package["name"],
+            "build_file_content": _native_binary_build_file_content(package["name"]),
+        }
+
+        nixpkgs_flake_package(
+            **(defaults | package)
+        )
+
+def _flake_package_deps_impl(_mctx):
+    _provide_binary([
+        "gdb",
+        {
+            "name": "qemu-system-arm",
+            "package": "qemu",
+        },
+    ])
 
 flake_package_deps = module_extension(
     implementation = _flake_package_deps_impl,
+)
+
+def _flake_package_dev_deps_impl(_mctx):
+    _provide_binary([
+        "nixd",
+        "nixfmt",
+        {
+            "name": "nixfmt-tree",
+            "build_file_content": _native_binary_build_file_content(
+                package = "nixfmt-tree",
+                binary = "treefmt",
+            ),
+        },
+    ])
+
+flake_package_dev_deps = module_extension(
+    implementation = _flake_package_dev_deps_impl,
 )

@@ -183,3 +183,15 @@ python = use_extension(
 )
 python.defaults(python_version = "3.11")
 python.toolchain(python_version = "3.11")
+
+flake_package_dev_deps = use_extension(
+    "//extensions:flake_package_deps.bzl",
+    "flake_package_dev_deps",
+    dev_dependency = True,
+)
+use_repo(
+    flake_package_dev_deps,
+    "nixd",
+    "nixfmt",
+    "nixfmt-tree",
+)
