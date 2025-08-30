@@ -7,16 +7,17 @@
   "file_scan_exclusions": [".cache/"],
   "languages": {
     "Nix": {
-      "language_servers": [ "nil", "!nixd" ],
+      "language_servers": ["nixd", "!nil"],
       "formatter": {
-             "external": {
-               "command": "alejandra",
-               "arguments": ["--quiet", "--"]
-             }
-           }
+        "external": {
+          // initialize with
+          // bazel fetch @nixfmt
+          "command": "./external/+flake_package_dev_deps+nixfmt/bin/nixfmt",
+          "arguments": ["--quiet", "--"]
+        }
+      }
     },
     "Starlark": {
-      "enable_language_server": true,
       "language_servers": ["starpls"],
       "formatter": {
         "external": {
@@ -50,6 +51,21 @@
           "--rename-file-limit=0",
           "--log=verbose"
         ]
+      }
+    },
+    "nixd": {
+      "binary": {
+        // initialize with
+        // bazel fetch @nixd
+        "path": "./external/+flake_package_dev_deps+nixd/bin/nixd"
+      },
+      "settings": {
+        "nixpkgs": {
+          "expr": "import (builtins.getFlake \"./tools/nix\").inputs.nixpkgs {}"
+        },
+        "diagnostic": {
+          "suppress": ["sema-unused-def-lambda-noarg-formal"]
+        }
       }
     },
     "starpls": {

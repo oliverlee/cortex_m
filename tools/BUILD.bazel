@@ -1,7 +1,8 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+load("@local_workspace_directories//:defs.bzl", "BAZEL_WORKSPACE_ROOT")
 load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
-load("@rules_multirun//:defs.bzl", "multirun")
+load("@rules_multirun//:defs.bzl", "command", "multirun")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 buildifier(
@@ -14,6 +15,29 @@ buildifier(
     name = "buildifier",
     lint_mode = "warn",
     mode = "fix",
+)
+
+command(
+    name = "nixfmt.check",
+    args = [
+        "--ci",
+        "--tree-root",
+        BAZEL_WORKSPACE_ROOT,
+        "--working-dir",
+        BAZEL_WORKSPACE_ROOT,
+    ],
+    command = "@nixfmt-tree",
+)
+
+command(
+    name = "nixfmt",
+    args = [
+        "--tree-root",
+        BAZEL_WORKSPACE_ROOT,
+        "--working-dir",
+        BAZEL_WORKSPACE_ROOT,
+    ],
+    command = "@nixfmt-tree",
 )
 
 genrule(
@@ -52,6 +76,7 @@ multirun(
     commands = [
         ":buildifier.check",
         ":clang-format.check",
+        ":nixfmt.check",
     ],
 )
 
@@ -60,6 +85,7 @@ multirun(
     commands = [
         ":buildifier",
         ":clang-format",
+        ":nixfmt",
     ],
 )
 
