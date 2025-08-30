@@ -19,6 +19,7 @@ filegroup(
 alias(
     name = "gdb",
     actual = "@gdb",
+    tags = ["manual"],
     visibility = ["//visibility:public"],
 )
 
@@ -35,6 +36,7 @@ qemu_runner(
 
 gdb_qemu_runner(
     name = "gdb_qemu_runner",
+    tags = ["manual"],
     visibility = ["//visibility:public"],
 )
 
