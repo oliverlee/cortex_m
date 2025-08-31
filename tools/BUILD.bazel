@@ -44,7 +44,7 @@ genrule(
     name = "gen-clang-format",
     outs = ["clang-format.bash"],
     cmd = """
-echo "#!/bin/bash" > $@
+echo "#!/usr/bin/env bash" > $@
 echo "cd \\$$BUILD_WORKSPACE_DIRECTORY" >> $@
 echo "exec bazelisk build \\$$@ //..." >> $@
 """,
@@ -93,7 +93,7 @@ genrule(
     name = "gen-clang-tidy",
     outs = ["clang-tidy.bash"],
     cmd = """
-echo "#!/bin/bash" > $@
+echo "#!/usr/bin/env bash" > $@
 echo "cd \\$$BUILD_WORKSPACE_DIRECTORY" >> $@
 echo "exec bazelisk build {options} \\$${{@:-//...}}" >> $@
 """.format(

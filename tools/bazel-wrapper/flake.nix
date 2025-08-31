@@ -1,5 +1,5 @@
 {
-  description = "flake defining the repo dev shell";
+  description = "flake defining files needed to bootstrap bazelisk";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
@@ -28,6 +28,7 @@
               bash
               bazelisk
               coreutils
+              diffutils
               findutils
               gnugrep
               gnused
@@ -36,8 +37,17 @@
             ++ lib.optionals stdenv.isDarwin [
               darwin.cctools
             ];
+          rc_line =
+            if "${system}" == "x86_64-linux" then
+              ''
+                common --shell_executable ${pkgs.lib.getExe pkgs.bash}
+              ''
+            else
+              "";
         in
         {
+          nixos-bazelrc = pkgs.writeText "nixos-${system}.bazelrc" "${rc_line}";
+
           default = pkgs.writeShellApplication {
             name = "bazel-wrapper";
             runtimeInputs = tools;
