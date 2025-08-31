@@ -134,6 +134,14 @@ archive_override(
     )],
 )
 
+LLVM_VERSION = "20.1.4"
+
+llvm_repo = use_repo_rule("@toolchains_llvm//toolchain:rules.bzl", "llvm")
+llvm_repo(
+    name = "llvm_toolchain_llvm",
+    llvm_version = LLVM_VERSION,
+)
+
 llvm = use_extension(
     "@toolchains_llvm//toolchain/extensions:llvm.bzl",
     "llvm",
@@ -167,8 +175,13 @@ llvm.toolchain(
             "-Wunreachable-code-return",
         ],
     },
-    llvm_version = "20.1.4",
+    llvm_version = LLVM_VERSION,
 )
+llvm.toolchain_root(
+    name = "llvm_toolchain",
+    label = "@llvm_toolchain_llvm//:BUILD",
+)
+
 use_repo(llvm, "llvm_toolchain")
 
 register_toolchains(
