@@ -5,5 +5,5 @@ cc_binary(
     srcs = ["main.cpp"],
     # This fails since the only registered host toolchain is from
     # toolchains_llvm which doesn't currently work on NixOS.
-    tags = ["manual"],
+    #tags = ["manual"],
 )
