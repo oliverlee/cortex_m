@@ -13,6 +13,7 @@
     let
       systems = [
         "x86_64-linux"
+        "aarch64-linux"
         "aarch64-darwin"
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
@@ -37,13 +38,9 @@
             ++ lib.optionals stdenv.isDarwin [
               darwin.cctools
             ];
-          rc_line =
-            if "${system}" == "x86_64-linux" then
-              ''
-                common --shell_executable ${pkgs.lib.getExe pkgs.bash}
-              ''
-            else
-              "";
+          rc_line = ''
+            common --shell_executable ${pkgs.lib.getExe pkgs.bash}
+          '';
         in
         {
           nixos-bazelrc = pkgs.writeText "nixos-${system}.bazelrc" "${rc_line}";

@@ -1,19 +1,24 @@
 load("//rules:qemu_output_test.bzl", "qemu_output_test")
 load("//rules:qemu_runner.bzl", "qemu_runner")
 
-[
-    qemu_output_test(
-        name = basename + "_test",
-        size = "small",
-        srcs = [basename + ".cpp"],
-        expected_stdout = basename + ".stdout",
-        platform = "//platform:lm3s6965evb",
-    )
-    for basename in [
-        "hello_semihosting",
-        "global_ctor_dtor",
-    ]
-]
+qemu_output_test(
+    name = "hello_semihosting_test",
+    size = "small",
+    srcs = ["hello_semihosting.cpp"],
+    expected_stdout = "hello_semihosting.stdout",
+    platform = "//platform:lm3s6965evb",
+)
+
+qemu_output_test(
+    name = "global_ctor_dtor_test",
+    size = "small",
+    srcs = ["global_ctor_dtor.cpp"],
+    expected_stdout = select({
+        "@platforms//cpu:aarch64": "global_ctor_dtor.aarch64.stdout",
+        "//conditions:default": "global_ctor_dtor.stdout",
+    }),
+    platform = "//platform:lm3s6965evb",
+)
 
 [
     (
