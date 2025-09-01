@@ -27,11 +27,27 @@
         {
           inherit (pkgs)
             gdb
-            qemu
             nixd
             nixfmt-tree
+            qemu
             ;
           nixfmt = pkgs.nixfmt-rfc-style;
+          glibc = let
+            sysroot-base = pkgs.symlinkJoin {
+            name = "sysroot-base";
+            paths = with pkgs; [
+              glibc
+              glibc.dev
+            ];
+          };
+          in pkgs.runCommand "sysroot" {} ''
+            cp -r ${sysroot-base} $out
+            chmod -R +w $out
+
+            # these are linker scripts and not libraries
+            rm $out/lib/libc.so
+            rm $out/lib/libm.so
+          '';
         }
       );
     };

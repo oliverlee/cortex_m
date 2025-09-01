@@ -23,6 +23,10 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          libs = with pkgs; [
+              libxml2
+              libz
+          ];
           tools =
             with pkgs;
             [
@@ -50,6 +54,7 @@
             runtimeInputs = tools;
             inheritPath = false;
             text = ''
+              export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath libs}"
               exec bazelisk "$@"
             '';
           };

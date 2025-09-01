@@ -108,15 +108,17 @@ bazel_dep(
     dev_dependency = True,
 )
 
-TOOLCHAINS_LLVM_COMMIT = "7cfc09dffd1305bc05916b6b24352583f3d790a9"
+#TOOLCHAINS_LLVM_COMMIT = "7cfc09dffd1305bc05916b6b24352583f3d790a9"
+TOOLCHAINS_LLVM_COMMIT = "9d03ab094a8035288b6f192d83b53c17aed4e517"
 
 archive_override(
     module_name = "toolchains_llvm",
-    integrity = "sha256-pxExoYkhpv6w3Lu9PJV4eqRAO9mxv8eI05L3T2lxPvU=",
+    #integrity = "sha256-pxExoYkhpv6w3Lu9PJV4eqRAO9mxv8eI05L3T2lxPvU=",
     strip_prefix = "toolchains_llvm-{commit}".format(
         commit = TOOLCHAINS_LLVM_COMMIT,
     ),
-    urls = ["https://github.com/bazel-contrib/toolchains_llvm/archive/{commit}.tar.gz".format(
+    #urls = ["https://github.com/bazel-contrib/toolchains_llvm/archive/{commit}.tar.gz".format(
+    urls = ["https://github.com/oliverlee/toolchains_llvm/archive/{commit}.tar.gz".format(
         commit = TOOLCHAINS_LLVM_COMMIT,
     )],
 )
@@ -175,11 +177,29 @@ llvm.toolchain(
             "-Wunreachable-code-return",
         ],
     },
+    link_flags = {
+        "": [
+            "--target=aarch64-unknown-linux-gnu",
+            "-no-canonical-prefixes",
+            "-fuse-ld=lld",
+            "-Lexternal/+flake_package_dev_deps+glibc/lib",
+            # Use the actual .so.6 file, not the linker script
+            "-nodefaultlibs",
+            "-l:libm.so.6",
+            "-l:libc.so.6",
+        ],
+    },
     llvm_version = LLVM_VERSION,
 )
 llvm.toolchain_root(
     name = "llvm_toolchain",
-    label = "@llvm_toolchain_llvm//:BUILD",
+    #label = "@llvm_toolchain_llvm//:BUILD",
+    path = "/home/builder/.cache/bazel/_bazel_builder/cache/repos/v1/contents/cae1b0d7ad08355c5a8b3de58a7db8933f5bd2daac843083789c1f297af84158/1",
+)
+llvm.sysroot(
+    name = "llvm_toolchain",
+    label = "@glibc//:sysroot",
+    targets = ["linux-aarch64"],
 )
 
 use_repo(llvm, "llvm_toolchain")
@@ -204,6 +224,7 @@ flake_package_dev_deps = use_extension(
 )
 use_repo(
     flake_package_dev_deps,
+    "glibc",
     "nixd",
     "nixfmt",
     "nixfmt-tree",

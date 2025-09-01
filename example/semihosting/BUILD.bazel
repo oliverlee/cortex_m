@@ -4,9 +4,6 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 cc_binary(
     name = "binary",
     srcs = ["main.cpp"],
-    # This fails since the only registered host toolchain is from
-    # toolchains_llvm which doesn't currently work on NixOS.
-    tags = ["manual"],
 )
 
 # `transition_config_binary` must be run with
@@ -17,9 +14,6 @@ transition_config_binary(
     name = "semihosting",
     src = ":binary",
     semihosting = "enabled",
-    # This fails since the only registered host toolchain is from
-    # toolchains_llvm which doesn't currently work on NixOS.
-    tags = ["manual"],
 )
 
 transition_config_binary(
