@@ -134,6 +134,8 @@ archive_override(
     )],
 )
 
+LLVM_TOOLCHAIN_ROOT_PATH = "/Users/oliver/llvm_toolchain_20.1.4"
+
 llvm = use_extension(
     "@toolchains_llvm//toolchain/extensions:llvm.bzl",
     "llvm",
@@ -167,8 +169,29 @@ llvm.toolchain(
             "-Wunreachable-code-return",
         ],
     },
+    link_flags = {
+        "darwin-aarch64": [
+            # see
+            # https://github.com/bazel-contrib/toolchains_llvm/pull/380/files
+            #
+            # On macOS, we never want to use /usr/bin/ld, which can happen if
+            # the toolchain root is provided as a path.
+            "--ld-path=ld64.lld",
+            "-L{}/lib".format(LLVM_TOOLCHAIN_ROOT_PATH),
+            "-Wl,-rpath,{}/lib".format(LLVM_TOOLCHAIN_ROOT_PATH),
+        ],
+    },
     llvm_version = "20.1.4",
 )
+llvm.toolchain_root(
+    name = "llvm_toolchain",
+    path = LLVM_TOOLCHAIN_ROOT_PATH,
+)
+##llvm.sysroot(
+#    name = "llvm_toolchain",
+#    label = "",
+#    targets = ["linux-aarch64"],
+#)
 use_repo(llvm, "llvm_toolchain")
 
 register_toolchains(
