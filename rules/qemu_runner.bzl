@@ -11,7 +11,6 @@ def _impl(ctx):
 
     fixed_args = [
         "-display none",
-        "-monitor stdio",
     ] if ctx.attr.enable_default_args else []
     if cfg.semihosting:
         fixed_args.append("-semihosting-config enable=on,target=auto")
