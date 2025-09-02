@@ -87,6 +87,16 @@ flake_package_deps = module_extension(
 
 def _flake_package_dev_deps_impl(_mctx):
     _provide_binary([
+        {
+            "name": "glibc",
+            "build_file_content": """
+filegroup(
+  name = "sysroot",
+  srcs = glob(["*/**"]),
+  visibility = ["//visibility:public"],
+)
+            """,
+        },
         "nixd",
         "nixfmt",
         {
