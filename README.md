@@ -94,4 +94,7 @@ transition_config_test(
 # developing
 
 Developing requires `bash`, `nix`, and coreutils on the `$PATH` to bootstrap
-the Nix shell application used in `tools/bazel`.
+the Nix shell application used in `tools/bazel`. On NixOS, [nix-ld][nix-ld] is
+required.
+
+[nix-ld]: https://github.com/nix-community/nix-ld

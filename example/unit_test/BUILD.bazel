@@ -4,6 +4,9 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
 cc_test(
     name = "test",
     srcs = ["main.cpp"],
+    # This fails since the only registered host toolchain is from
+    # toolchains_llvm which doesn't currently work on NixOS.
+    tags = ["manual"],
 )
 
 transition_config_test(
