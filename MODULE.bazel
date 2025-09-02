@@ -75,7 +75,7 @@ bazel_dep(
 )
 bazel_dep(
     name = "bazel_clang_format",
-    version = "0.0.0",
+    version = "0.0.1",
     dev_dependency = True,
 )
 bazel_dep(
@@ -95,7 +95,6 @@ bazel_dep(
 )
 bazel_dep(
     name = "rules_python",
-    version = "1.5.3",
     dev_dependency = True,
 )
 bazel_dep(
@@ -106,6 +105,19 @@ bazel_dep(
 bazel_dep(
     name = "hedron_compile_commands",
     dev_dependency = True,
+)
+
+RULES_PYTHON_COMMIT = "4a422b02011c8913a800eb3d2f578ae7afffc497"
+
+archive_override(
+    module_name = "rules_python",
+    integrity = "sha256-Tq7TGVY3unA20/2FfXIqH+8MuM7Ahi6B6kGwmE7WQGY=",
+    strip_prefix = "rules_python-{commit}".format(
+        commit = RULES_PYTHON_COMMIT,
+    ),
+    urls = ["https://github.com/bazel-contrib/rules_python/archive/{commit}.tar.gz".format(
+        commit = RULES_PYTHON_COMMIT,
+    )],
 )
 
 TOOLCHAINS_LLVM_COMMIT = "7cfc09dffd1305bc05916b6b24352583f3d790a9"
