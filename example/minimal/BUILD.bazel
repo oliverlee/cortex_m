@@ -3,4 +3,7 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 cc_binary(
     name = "minimal",
     srcs = ["main.cpp"],
+    # This fails since the only registered host toolchain is from
+    # toolchains_llvm which doesn't currently work on NixOS.
+    tags = ["manual"],
 )
