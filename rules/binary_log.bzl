@@ -2,6 +2,8 @@
 log output for a binary executed on the host platform
 """
 
+load("//rules/private:runner.bzl", "rlpath", "runfiles_init")
+
 LoggingInfo = provider(
     doc = "Log output for a binary target",
     fields = {
@@ -61,6 +63,7 @@ fi
 
 exit $exit_code
 """.format(
+            runfiles_init = runfiles_init,
             command = '{runner}"$1" > "$2" 2> "$3"'.format(
                 runner = '"$4" ' if runner else "",
             ),
@@ -149,6 +152,7 @@ def _binary_log_test_impl(ctx):
     content = [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
+        "{runfiles_init}",
         "",
         "exit_code=0",
     ]
@@ -163,12 +167,13 @@ def _binary_log_test_impl(ctx):
             content += [
                 line.format(
                     fd = fd,
-                    diff = ctx.attr.diff,
+                    diff = rlpath(ctx.attr._diff),
+                    diff_opts = ctx.attr.diff_opts,
                 )
                 for line in [
                     "",
                     "echo '--- {fd} ---'",
-                    "{diff} {{expected_{fd}}} {{actual_{fd}}} || exit_code=1",
+                    "$(rlocation {diff}) {diff_opts} {{expected_{fd}}} {{actual_{fd}}} || exit_code=1",
                     "echo '--------------'",
                 ]
             ]
@@ -186,14 +191,25 @@ def _binary_log_test_impl(ctx):
     executable = ctx.actions.declare_file(ctx.label.name + ".bash")
     ctx.actions.write(
         output = executable,
-        content = "\n".join(content).format(**paths),
+        content = "\n".join(content).format(
+            runfiles_init = runfiles_init,
+            **paths
+        ),
         is_executable = True,
     )
 
     return [
         DefaultInfo(
             executable = executable,
-            runfiles = ctx.runfiles(files = runfiles),
+            runfiles = ctx.runfiles(
+                files = runfiles,
+                transitive_files = depset(transitive = [
+                    ctx.attr._diff.files,
+                    ctx.attr._runfiles.files,
+                ]),
+            ).merge_all([
+                ctx.attr._diff[DefaultInfo].default_runfiles,
+            ]),
         ),
         RunEnvironmentInfo(
             environment = ctx.attr.env,
@@ -245,9 +261,17 @@ binary_log_test = rule(
                 "is used if this rule also executes the binary."
             ),
         ),
-        "diff": attr.string(
-            default = "diff -u --color=always",
-            doc = "Diff command used to compare files.",
+        "diff_opts": attr.string(
+            default = "-u --color=always",
+            doc = "Options to the diff command used to compare files.",
+        ),
+        "_diff": attr.label(
+            default = "@diff",
+            executable = True,
+            cfg = "exec",
+        ),
+        "_runfiles": attr.label(
+            default = "@bazel_tools//tools/bash/runfiles",
         ),
     },
     test = True,

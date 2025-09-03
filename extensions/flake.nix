@@ -34,6 +34,8 @@
 
           nixfmt = pkgs.nixfmt-rfc-style;
 
+          diff = pkgs.diffutils;
+
           glibc =
             let
               sysroot-base = pkgs.symlinkJoin {
