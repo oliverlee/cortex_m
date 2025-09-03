@@ -87,6 +87,7 @@ flake_package_deps = module_extension(
 
 def _flake_package_dev_deps_impl(_mctx):
     _provide_binary([
+        "diff",
         {
             "name": "glibc",
             "build_file_content": """

@@ -33,7 +33,6 @@
               bash
               bazelisk
               coreutils
-              diffutils
               findutils
               gnugrep
               gnused

@@ -16,7 +16,6 @@ def qemu_output_test(
         local_defines = None,
         copts = None,
         run_under = "//:qemu_runner",
-        diff = "diff -u --color=always --strip-trailing-cr",
         **kwargs):
     cc_binary(
         name = name + ".binary",
@@ -42,6 +41,5 @@ def qemu_output_test(
         expected_stdout = expected_stdout,
         expected_stderr = expected_stderr,
         run_under = run_under,
-        diff = diff,
         **kwargs
     )

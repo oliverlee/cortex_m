@@ -245,7 +245,7 @@
   "moduleExtensions": {
     "//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "kxkFzo6faokOwvSsugWfRrFUl1YoZyDQUh2ULmZWNK0=",
+        "bzlTransitiveDigest": "rWtqvHprZ0ZFQV/2s5lstiiw/ULASqSrqX6Ep1Db1EQ=",
         "usagesDigest": "mK4YgaAu5b/qaOsvCSv9KZ6YWfBZ1+idETueZeq0Zgw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -303,7 +303,7 @@
     },
     "//extensions:flake_package_deps.bzl%flake_package_dev_deps": {
       "general": {
-        "bzlTransitiveDigest": "kxkFzo6faokOwvSsugWfRrFUl1YoZyDQUh2ULmZWNK0=",
+        "bzlTransitiveDigest": "rWtqvHprZ0ZFQV/2s5lstiiw/ULASqSrqX6Ep1Db1EQ=",
         "usagesDigest": "3VqgbgIsoCYcZdgEvE1x0SA7ofzQrz1Y3WawnvC6qfA=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -314,6 +314,20 @@
             "attributes": {
               "flake_file": "@@//extensions:flake.nix",
               "flake_lock_file": "@@//extensions:flake.lock"
+            }
+          },
+          "diff": {
+            "repoRuleId": "@@rules_nixpkgs_core+//:nixpkgs.bzl%_nixpkgs_flake_package",
+            "attributes": {
+              "nix_flake_file": "@@+flake_package_dev_deps+flake_copy//:flake.nix",
+              "nix_flake_lock_file": "@@+flake_package_dev_deps+flake_copy//:flake.lock",
+              "nix_flake_file_deps": {},
+              "package": "diff",
+              "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"diff\",\n    out = \"diff\",\n    src = \"bin/diff\",\n    visibility = [\"//visibility:public\"],\n)\n",
+              "nixopts": [],
+              "quiet": false,
+              "fail_not_supported": true,
+              "legacy_path_syntax": false
             }
           },
           "glibc": {

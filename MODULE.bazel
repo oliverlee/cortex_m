@@ -234,6 +234,7 @@ flake_package_dev_deps = use_extension(
 )
 use_repo(
     flake_package_dev_deps,
+    "diff",
     "glibc",
     "nixd",
     "nixfmt",
