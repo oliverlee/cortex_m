@@ -120,11 +120,21 @@ archive_override(
     )],
 )
 
-TOOLCHAINS_LLVM_COMMIT = "7cfc09dffd1305bc05916b6b24352583f3d790a9"
+# this is the current HEAD commit, but we need to patch shebangs
+TOOLCHAINS_LLVM_COMMIT = "0bdeae25025aeb6f914db2a02cb2efeb302743b5"
 
 archive_override(
     module_name = "toolchains_llvm",
-    integrity = "sha256-pxExoYkhpv6w3Lu9PJV4eqRAO9mxv8eI05L3T2lxPvU=",
+    integrity = "sha256-Nqifshn9xrdZEK5cj0ZnuYEPx+SHxKZQClTLDb41tJA=",
+    patch_cmds = [
+        # replace shebangs
+        "sed -i 's|^#!/bin/bash|#!/usr/bin/env bash|' toolchain/cc_wrapper.sh.tpl",
+        "sed -i 's|^#!/bin/bash|#!/usr/bin/env bash|' toolchain/osx_cc_wrapper.sh.tpl",
+        # don't link lm, we'll do that manually
+        # libm.so is a linker script and not a library in nixpkgs
+        # https://github.com/bazel-contrib/toolchains_llvm/blob/0bdeae25025aeb6f914db2a02cb2efeb302743b5/toolchain/cc_toolchain_config.bzl#L201
+        "sed -i 's|\"-lm\",||' toolchain/cc_toolchain_config.bzl",
+    ],
     strip_prefix = "toolchains_llvm-{commit}".format(
         commit = TOOLCHAINS_LLVM_COMMIT,
     ),
@@ -151,6 +161,22 @@ llvm = use_extension(
     "llvm",
     dev_dependency = True,
 )
+llvm.sysroot(
+    name = "llvm_toolchain",
+    label = "@glibc//:sysroot",
+    targets = [
+        "linux-x86_64",
+        "linux-aarch64",
+    ],
+)
+
+llvm_toolchain_sysroot_linkopts = [
+    # Use the actual .so.6 library, not .so files which are linker scripts
+    "-nodefaultlibs",
+    "-l:libm.so.6",
+    "-l:libc.so.6",
+]
+
 llvm.toolchain(
     cxx_flags = {
         "": [
@@ -179,6 +205,11 @@ llvm.toolchain(
             "-Wunreachable-code-return",
         ],
     },
+    # use link_libs to avoid overriding the default linkopts
+    link_libs = {
+        "linux-x86_64": llvm_toolchain_sysroot_linkopts,
+        "linux-aarch64": llvm_toolchain_sysroot_linkopts,
+    },
     llvm_version = "20.1.4",
 )
 use_repo(llvm, "llvm_toolchain")
@@ -203,6 +234,7 @@ flake_package_dev_deps = use_extension(
 )
 use_repo(
     flake_package_dev_deps,
+    "glibc",
     "nixd",
     "nixfmt",
     "nixfmt-tree",
