@@ -10,7 +10,7 @@ inputs:
     description: |
       BuildBuddy API key to access the remote cache.
   external-cache-key:
-    default: ${{ runner.os }}-default
+    default: ${{ runner.arch }}_${{ runner.os }}-default
     description: |
       Key specifying which cache to restore.
 
