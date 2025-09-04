@@ -28,9 +28,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "ubuntu-latest"
-          - os: "macos-latest"
-    runs-on: ${{ matrix.os }}
+          - system: ubuntu-latest
+          - system: ubuntu-24.04-arm
+          - system: macos-latest
+    runs-on: ${{ matrix.system }}
     permissions:
       actions: write
       contents: read
@@ -55,4 +56,4 @@ jobs:
             /nix
             ~/.cache/nix
             ~root/.cache/nix
-          primary-key: bazel-external-cache-${{ runner.os }}-default
+          primary-key: bazel-external-cache-${{ runner.arch }}_${{ runner.os }}-default

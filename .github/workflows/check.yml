@@ -14,12 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         compilation_mode:
-          - 'fastbuild'
-          - 'opt'
-        os:
-          - 'ubuntu-latest'
-          - 'macos-latest'
-    runs-on: ${{ matrix.os }}
+          - fastbuild
+          - opt
+        system:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macos-latest
+    runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/ci-env-setup
@@ -36,12 +37,13 @@ jobs:
       fail-fast: false
       matrix:
         compilation_mode:
-          - 'fastbuild'
-          - 'opt'
-        os:
-          - 'ubuntu-latest'
-          - 'macos-latest'
-    runs-on: ${{ matrix.os }}
+          - fastbuild
+          - opt
+        system:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macos-latest
+    runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/ci-env-setup

@@ -34,6 +34,7 @@
               bazelisk
               coreutils
               findutils
+              gawk
               gnugrep
               gnused
               nix
