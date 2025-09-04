@@ -17,13 +17,20 @@ bazel_wrapper_hash=$(cat "${bazel_wrapper}"/* | sha1sum | cut -d' ' -f1)
 
 hashed_out_link="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
 
+function nix_build
+{
+  nix \
+    --option warn-dirty false \
+    --extra-experimental-features 'nix-command flakes' \
+    build \
+    --verbose \
+    "$@"
+}
+
 if [[ ! -e "$hashed_out_link" ]]; then
   rm -rf "${workspace_root}/.bazel-wrapper"
   store_path=$(
-    nix \
-      --option warn-dirty false \
-      build \
-      --verbose \
+    nix_build \
       --out-link "$hashed_out_link" \
       --print-out-paths \
       "path:$bazel_wrapper"
@@ -37,16 +44,13 @@ if [[ ! -e /bin/bash && ! -e "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" ]]; th
   echo "generating/updating nixos specific bazelrc"
 
   rm -rf "$nixos_bazelrc_dir"
-  nix \
-    --option warn-dirty false \
-    build \
-    --verbose \
+  nix_build \
     --out-link "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" \
     "path:${bazel_wrapper}#nixos-bazelrc"
   cat > ${nixos_bazelrc_dir}/bazelrc << EOF
 import %workspace%/.nixos-autoconfig/${bazel_wrapper_hash}
 EOF
-    
+
 fi
 
 exec "$hashed_out_link/bin/bazel-wrapper" "$@"
