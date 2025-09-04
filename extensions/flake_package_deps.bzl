@@ -74,6 +74,7 @@ def _provide_binary(pkgs):
 
 def _flake_package_deps_impl(_mctx):
     _provide_binary([
+        "diff",
         "gdb",
         {
             "name": "qemu-system-arm",
@@ -87,7 +88,6 @@ flake_package_deps = module_extension(
 
 def _flake_package_dev_deps_impl(_mctx):
     _provide_binary([
-        "diff",
         {
             "name": "glibc",
             "build_file_content": """
