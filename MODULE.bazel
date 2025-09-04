@@ -111,7 +111,7 @@ RULES_PYTHON_COMMIT = "4a422b02011c8913a800eb3d2f578ae7afffc497"
 
 archive_override(
     module_name = "rules_python",
-    integrity = "sha256-Tq7TGVY3unA20/2FfXIqH+8MuM7Ahi6B6kGwmE7WQGY=",
+    integrity = "sha256-wFzkJmfEF7MRcn++6jdOk5DsXxt2ej/FESoiJkTKQD0=",
     strip_prefix = "rules_python-{commit}".format(
         commit = RULES_PYTHON_COMMIT,
     ),
