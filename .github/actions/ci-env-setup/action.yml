@@ -2,7 +2,7 @@ name: "CI environment setup"
 description: |
   * set home bazelrc for CI runner
   * set buildbuddy api key
-  * setup vendored external deps
+  * restore nix store
 
 inputs:
   buildbuddy-api-key:
@@ -36,18 +36,12 @@ runs:
           echo "common:remote-cache --bes_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
         fi
 
-    - name: setup bazel vendored external deps
-      shell: bash
-      run: |
-        echo "common --vendor_dir=$HOME/bazel_external_deps" >> ~/.bazelrc
-
-    - name: restore bazel vendored external deps
+    - name: restore nix store
       uses: nix-community/cache-nix-action/restore@v6
       with:
         paths: |
-          ~/bazel_external_deps
           /nix
           ~/.cache/nix
           ~root/.cache/nix
-        primary-key: bazel-external-cache-${{ inputs.external-cache-key }}
+        primary-key: nix-store-${{ inputs.external-cache-key }}
         save: false
