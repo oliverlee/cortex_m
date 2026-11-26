@@ -8,6 +8,10 @@ on:
     types: [synchronize, opened, reopened, edited]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   examples:
     strategy:
