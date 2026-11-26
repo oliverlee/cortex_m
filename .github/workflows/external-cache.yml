@@ -44,7 +44,12 @@ jobs:
 
       - name: fetch external deps
         run: |
-          bazel fetch //...
+          bazel build --nobuild //...
+
+      - name: report bazel repo contents cache size
+        run: |
+          du -sh ~/.cache/bazel-repo-contents/* | sort -h | tail -n 5
+          du -sh ~/.cache/bazel-repo-contents
 
       - uses: nix-community/cache-nix-action/save@v6
         with:
@@ -52,4 +57,5 @@ jobs:
             /nix
             ~/.cache/nix
             ~root/.cache/nix
+            ~/.cache/bazel-repo-contents
           primary-key: nix-store-${{ runner.arch }}_${{ runner.os }}-default

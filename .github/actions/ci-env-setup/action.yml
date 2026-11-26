@@ -2,7 +2,7 @@ name: "CI environment setup"
 description: |
   * set home bazelrc for CI runner
   * set buildbuddy api key
-  * restore nix store
+  * restore nix store and bazel repo contents cache
 
 inputs:
   buildbuddy-api-key:
@@ -29,12 +29,18 @@ runs:
           echo "common:remote-cache --bes_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
         fi
 
-    - name: restore nix store
+    - name: setup bazel repo contents cache
+      shell: bash
+      run: |
+        echo "common --repo_contents_cache=$HOME/.cache/bazel-repo-contents" >> ~/.bazelrc
+
+    - name: restore nix store and bazel repo contents cache
       uses: nix-community/cache-nix-action/restore@v6
       with:
         paths: |
           /nix
           ~/.cache/nix
           ~root/.cache/nix
+          ~/.cache/bazel-repo-contents
         primary-key: nix-store-${{ inputs.external-cache-key }}
         save: false
