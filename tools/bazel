@@ -19,8 +19,11 @@ hashed_out_link="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
 
 function nix_build
 {
+  # The Cachix options cause a warning if the user is not in trusted-users.
   nix \
     --option warn-dirty false \
+    --option extra-substituters https://oliverlee.cachix.org \
+    --option extra-trusted-public-keys oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8= \
     --extra-experimental-features 'nix-command flakes' \
     build \
     --verbose \
