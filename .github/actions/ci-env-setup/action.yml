@@ -28,6 +28,13 @@ runs:
       shell: bash
       run: |
         cp .github/workflows/ci.bazelrc ~/.bazelrc
+        # tag BuildBuddy invocations with the commit of the pull request, not
+        # the merge commit that GitHub Actions checks out
+        cat >> ~/.bazelrc << EOF
+        common:remote-cache --build_metadata=COMMIT_SHA=${{ github.event.pull_request.head.sha || github.sha }}
+        common:remote-cache --build_metadata=BRANCH_NAME=${{ github.head_ref || github.ref_name }}
+        common:remote-cache --build_metadata=REPO_URL=${{ github.server_url }}/${{ github.repository }}
+        EOF
         rw_api_key="${{ inputs.buildbuddy-api-key }}"
         if [[ -n "$rw_api_key" ]]; then
           echo "common:remote-cache --remote_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
