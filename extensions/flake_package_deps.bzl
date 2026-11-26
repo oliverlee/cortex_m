@@ -4,6 +4,17 @@ extension for loading packages from a flake
 
 load("@rules_nixpkgs_core//:nixpkgs.bzl", "nixpkgs_flake_package")
 
+# The Nix daemon ignores these options, with a warning, unless the user is in
+# trusted-users.
+_CACHIX_NIXOPTS = [
+    "--option",
+    "extra-substituters",
+    "https://oliverlee.cachix.org",
+    "--option",
+    "extra-trusted-public-keys",
+    "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8=",
+]
+
 def _flake_copy_impl(rctx):
     rctx.file(
         "flake.nix",
@@ -64,6 +75,7 @@ def _provide_binary(pkgs):
         defaults = {
             "nix_flake_file": "@flake_copy//:flake.nix",
             "nix_flake_lock_file": "@flake_copy//:flake.lock",
+            "nixopts": _CACHIX_NIXOPTS,
             "package": package["name"],
             "build_file_content": _native_binary_build_file_content(package["name"]),
         }
@@ -76,10 +88,7 @@ def _flake_package_deps_impl(_mctx):
     _provide_binary([
         "diff",
         "gdb",
-        {
-            "name": "qemu-system-arm",
-            "package": "qemu",
-        },
+        "qemu-system-arm",
     ])
 
 flake_package_deps = module_extension(

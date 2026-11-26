@@ -24,7 +24,21 @@ registered toolchain.
 # running with `qemu`
 
 An elf can be run with `qemu-system-arm`. This requires an installation of `nix`
-to download the `qemu` package.
+to download QEMU.
+
+`cortex_m` builds QEMU with only the ARM target and downloads it from the
+[`oliverlee` Cachix cache][cachix]. The Nix daemon uses the cache only if the
+user is in `trusted-users`. Otherwise, add these lines to `/etc/nix/nix.conf`
+(`/etc/nix/nix.custom.conf` with Determinate Nix) and restart the Nix daemon:
+
+```
+extra-substituters = https://oliverlee.cachix.org
+extra-trusted-public-keys = oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8=
+```
+
+Without the cache, Nix builds QEMU locally.
+
+[cachix]: https://app.cachix.org/cache/oliverlee
 
 ```sh
 bazel run \

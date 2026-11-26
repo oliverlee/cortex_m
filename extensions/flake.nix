@@ -29,12 +29,16 @@
             gdb
             nixd
             nixfmt-tree
-            qemu
             ;
 
           nixfmt = pkgs.nixfmt-rfc-style;
 
           diff = pkgs.diffutils;
+
+          qemu-system-arm = pkgs.qemu.override {
+            hostCpuTargets = [ "arm-softmmu" ];
+            minimal = true;
+          };
 
           glibc =
             let

@@ -272,7 +272,7 @@
   "moduleExtensions": {
     "//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "I8cdfXDmWFgZF9BQSfW0QvP1Ifkitpseuz30PgypUVI=",
+        "bzlTransitiveDigest": "4Ztf5eaPPPnqD0UEQf7dqAW9RpNJRSLDuI0TKIVNEsU=",
         "usagesDigest": "mK4YgaAu5b/qaOsvCSv9KZ6YWfBZ1+idETueZeq0Zgw=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_nixpkgs_core rules_nixpkgs_core+",
@@ -294,7 +294,14 @@
               "nix_flake_file_deps": {},
               "package": "diff",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"diff\",\n    out = \"diff\",\n    src = \"bin/diff\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -308,7 +315,14 @@
               "nix_flake_file_deps": {},
               "package": "gdb",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"gdb\",\n    out = \"gdb\",\n    src = \"bin/gdb\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -320,9 +334,16 @@
               "nix_flake_file": "@@+flake_package_deps+flake_copy//:flake.nix",
               "nix_flake_lock_file": "@@+flake_package_deps+flake_copy//:flake.lock",
               "nix_flake_file_deps": {},
-              "package": "qemu",
+              "package": "qemu-system-arm",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"qemu-system-arm\",\n    out = \"qemu-system-arm\",\n    src = \"bin/qemu-system-arm\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -333,7 +354,7 @@
     },
     "//extensions:flake_package_deps.bzl%flake_package_dev_deps": {
       "general": {
-        "bzlTransitiveDigest": "I8cdfXDmWFgZF9BQSfW0QvP1Ifkitpseuz30PgypUVI=",
+        "bzlTransitiveDigest": "4Ztf5eaPPPnqD0UEQf7dqAW9RpNJRSLDuI0TKIVNEsU=",
         "usagesDigest": "3VqgbgIsoCYcZdgEvE1x0SA7ofzQrz1Y3WawnvC6qfA=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_nixpkgs_core rules_nixpkgs_core+",
@@ -355,7 +376,14 @@
               "nix_flake_file_deps": {},
               "package": "glibc",
               "build_file_content": "\nfilegroup(\n  name = \"sysroot\",\n  srcs = glob([\"*/**\"]),\n  visibility = [\"//visibility:public\"],\n)\n            ",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -369,7 +397,14 @@
               "nix_flake_file_deps": {},
               "package": "nixd",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"nixd\",\n    out = \"nixd\",\n    src = \"bin/nixd\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -383,7 +418,14 @@
               "nix_flake_file_deps": {},
               "package": "nixfmt",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"nixfmt\",\n    out = \"nixfmt\",\n    src = \"bin/nixfmt\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
@@ -397,7 +439,14 @@
               "nix_flake_file_deps": {},
               "package": "nixfmt-tree",
               "build_file_content": "\nload(\"@bazel_skylib//rules:native_binary.bzl\", \"native_binary\")\n\nnative_binary(\n    name = \"nixfmt-tree\",\n    out = \"treefmt\",\n    src = \"bin/treefmt\",\n    visibility = [\"//visibility:public\"],\n)\n",
-              "nixopts": [],
+              "nixopts": [
+                "--option",
+                "extra-substituters",
+                "https://oliverlee.cachix.org",
+                "--option",
+                "extra-trusted-public-keys",
+                "oliverlee.cachix.org-1:58fy+wCReIwjmQiTslvrmWkNrQwbhpuoqqelrwGyzf8="
+              ],
               "quiet": false,
               "fail_not_supported": true,
               "legacy_path_syntax": false
