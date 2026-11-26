@@ -13,6 +13,10 @@ common --ui_actions_shown=20
 common --progress_in_terminal_title
 common --enable_platform_specific_config
 
+# keep reproducible repos, e.g. the LLVM toolchain, in the remote cache
+# startup options can't be set per config, so this applies to every build
+startup --experimental_remote_repo_contents_cache
+
 common:remote-cache --bes_results_url=https://oliverlee.buildbuddy.io/invocation/
 common:remote-cache --bes_backend=grpcs://oliverlee.buildbuddy.io
 common:remote-cache --remote_cache=grpcs://oliverlee.buildbuddy.io
