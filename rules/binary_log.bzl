@@ -205,10 +205,10 @@ def _binary_log_test_impl(ctx):
                 files = runfiles,
                 transitive_files = depset(transitive = [
                     ctx.attr._diff.files,
-                    ctx.attr._runfiles.files,
                 ]),
             ).merge_all([
                 ctx.attr._diff[DefaultInfo].default_runfiles,
+                ctx.attr._runfiles[DefaultInfo].default_runfiles,
             ]),
         ),
         RunEnvironmentInfo(

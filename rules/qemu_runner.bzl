@@ -72,8 +72,7 @@ fi
             executable = out,
             runfiles = ctx.runfiles(
                 files = [ctx.executable._qemu_system_arm],
-                transitive_files = ctx.attr._runfiles.files,
-            ),
+            ).merge(ctx.attr._runfiles[DefaultInfo].default_runfiles),
         ),
         RunEnvironmentInfo(
             environment = ctx.attr.env,
