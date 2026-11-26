@@ -1,0 +1,17 @@
+# keep reproducible repos, e.g. the LLVM toolchain, in the remote cache
+# startup options can't be set per config, so this applies to every build
+startup --experimental_remote_repo_contents_cache
+
+common:remote-cache --bes_results_url=https://oliverlee.buildbuddy.io/invocation/
+common:remote-cache --bes_backend=grpcs://oliverlee.buildbuddy.io
+common:remote-cache --remote_cache=grpcs://oliverlee.buildbuddy.io
+common:remote-cache --remote_instance_name=cortex_m-instance-0
+common:remote-cache --remote_header=x-buildbuddy-api-key=74Tp9CI7DxnilnI5ZEZ9
+common:remote-cache --remote_timeout=10m
+common:remote-cache --remote_build_event_upload=minimal
+common:remote-cache --remote_download_outputs=minimal
+common:remote-cache --remote_cache_compression
+common:remote-cache --slim_profile=false
+common:remote-cache --experimental_profile_include_primary_output
+common:remote-cache --experimental_profile_include_target_label
+common:remote-cache --legacy_important_outputs=false
