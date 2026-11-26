@@ -28,6 +28,14 @@ jobs:
           - pinned
           - 8.x
           - 9.x
+        include:
+          - bazel_version: pinned
+            lockfile_mode: error
+          # other Bazel versions may write a different lockfile
+          - bazel_version: 8.x
+            lockfile_mode: update
+          - bazel_version: 9.x
+            lockfile_mode: update
     runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4
@@ -43,6 +51,7 @@ jobs:
         cd example
         bazelisk build \
           --compilation_mode=${{ matrix.compilation_mode }} \
+          --lockfile_mode=${{ matrix.lockfile_mode }} \
           //...
 
   test:
