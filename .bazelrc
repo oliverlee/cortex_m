@@ -2,6 +2,7 @@ common --registry=https://raw.githubusercontent.com/digiboys/bazel-registry/main
 common --registry=https://bcr.bazel.build
 
 common --repo_env="BAZEL_USE_CPP_ONLY_TOOLCHAIN=1"
+common:macos --xcode_version_config=//tools:host_xcodes
 # skip Xcode autoconfiguration for the C++ toolchain `apple_support` registers
 common:macos --repo_env="BAZEL_NO_APPLE_CPP_TOOLCHAIN=1"
 

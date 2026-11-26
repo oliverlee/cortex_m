@@ -1,4 +1,4 @@
-load("@apple_support//xcode:xcode_config.bzl", "xcode_config")
+load("@apple_support//xcode:xcode_config.bzl", "detected_xcodes", "xcode_config")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
 load("@local_workspace_directories//:defs.bzl", "BAZEL_WORKSPACE_ROOT")
@@ -6,7 +6,14 @@ load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
 load("@rules_multirun//:defs.bzl", "command", "multirun")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
-xcode_config(name = "host_xcodes")
+# The default `detected_versions` is `@local_config_xcode`, which runs `xcrun`
+# for each installed Xcode.
+detected_xcodes(name = "no_detected_xcodes")
+
+xcode_config(
+    name = "host_xcodes",
+    detected_versions = ":no_detected_xcodes",
+)
 
 buildifier(
     name = "buildifier.check",
