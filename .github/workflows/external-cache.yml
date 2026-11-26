@@ -44,16 +44,12 @@ jobs:
 
       - name: fetch external deps
         run: |
-          bazelisk vendor \
-            --vendor_dir=~/bazel_external_deps \
-            --curses=yes \
-            //...
+          bazel fetch //...
 
       - uses: nix-community/cache-nix-action/save@v6
         with:
           paths: |
-            ~/bazel_external_deps
             /nix
             ~/.cache/nix
             ~root/.cache/nix
-          primary-key: bazel-external-cache-${{ runner.arch }}_${{ runner.os }}-default
+          primary-key: nix-store-${{ runner.arch }}_${{ runner.os }}-default
