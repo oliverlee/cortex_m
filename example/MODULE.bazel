@@ -19,16 +19,21 @@ bazel_dep(
     dev_dependency = True,
 )
 
-TOOLCHAINS_ARM_GNU_COMMIT = "5012bfb601600cfbae5322cbc2acfbed41c52e0f"
+TOOLCHAINS_ARM_GNU_COMMIT = "6895733b87d3a75a40056b12c3d6628bc6945011"
 
 archive_override(
     module_name = "toolchains_arm_gnu",
-    integrity = "sha256-wOFizsEMZk1SX+m+39HXoU5yY+3R0VYyqH2g6FTRzdo=",
-    strip_prefix = "bazel-arm-none-eabi-{commit}".format(
+    integrity = "sha256-QKl/PAnjE4O4IEKIwImJIT3ihjtWHPTY9h5FBg7yKFQ=",
+    patch_cmds = [
+        # Bazel 9 removes @local_config_platform
+        "sed -i.bak 's|@local_config_platform//:constraints.bzl|@platforms//host:constraints.bzl|' toolchain/templates/toolchain.bazel",
+        "rm toolchain/templates/toolchain.bazel.bak",
+    ],
+    strip_prefix = "toolchains_arm_gnu-{commit}".format(
         commit = TOOLCHAINS_ARM_GNU_COMMIT,
     ),
     urls = [
-        "https://github.com/oliverlee/bazel-arm-none-eabi/archive/{commit}.tar.gz".format(
+        "https://github.com/hexdae/toolchains_arm_gnu/archive/{commit}.tar.gz".format(
             commit = TOOLCHAINS_ARM_GNU_COMMIT,
         ),
     ],
