@@ -2790,7 +2790,7 @@
     "@@toolchains_arm_gnu+//:extensions.bzl%arm_toolchain": {
       "general": {
         "bzlTransitiveDigest": "7cBQIOrC82GgpTX8JX9Us34NRNTF8K1tTb42EFiHMAs=",
-        "usagesDigest": "thBXnZRtZ8cb4M80CPXrHZBesauLgmtqCWEW+9Vx9Ic=",
+        "usagesDigest": "NVMaFmvwybgRpgFjR99Eg0BXVdSIjDZihySVYZtOd7c=",
         "recordedInputs": [
           "REPO_MAPPING:rules_cc+,bazel_tools bazel_tools",
           "REPO_MAPPING:rules_cc+,cc_compatibility_proxy rules_cc++compatibility_proxy+cc_compatibility_proxy",
@@ -2807,23 +2807,23 @@
             "attributes": {
               "toolchain_name": "arm_none_eabi",
               "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
+              "version": "13.2.1-1.1",
               "hosts": {
+                "arm_none_eabi_darwin_arm64": [
+                  "@platforms//os:macos",
+                  "@platforms//cpu:arm64"
+                ],
                 "arm_none_eabi_darwin_x86_64": [
                   "@platforms//os:macos",
                   "@platforms//cpu:x86_64"
                 ],
-                "arm_none_eabi_darwin_arm64": [
-                  "@platforms//os:macos",
+                "arm_none_eabi_linux_aarch64": [
+                  "@platforms//os:linux",
                   "@platforms//cpu:arm64"
                 ],
                 "arm_none_eabi_linux_x86_64": [
                   "@platforms//os:linux",
                   "@platforms//cpu:x86_64"
-                ],
-                "arm_none_eabi_linux_aarch64": [
-                  "@platforms//os:linux",
-                  "@platforms//cpu:aarch64"
                 ],
                 "arm_none_eabi_windows_x86_64": [
                   "@platforms//os:windows",
@@ -2832,44 +2832,30 @@
               }
             }
           },
-          "arm_none_eabi_darwin_x86_64": {
-            "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
-            "attributes": {
-              "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
-              "sha256": "075faa4f3e8eb45e59144858202351a28706f54a6ec17eedd88c9fb9412372cc",
-              "strip_prefix": "arm-gnu-toolchain-13.2.Rel1-darwin-x86_64-arm-none-eabi",
-              "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-darwin-x86_64-arm-none-eabi.tar.xz",
-              "exec_compatible_with": [
-                "@platforms//os:macos",
-                "@platforms//cpu:x86_64"
-              ]
-            }
-          },
           "arm_none_eabi_darwin_arm64": {
             "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
             "attributes": {
               "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
-              "sha256": "39c44f8af42695b7b871df42e346c09fee670ea8dfc11f17083e296ea2b0d279",
-              "strip_prefix": "arm-gnu-toolchain-13.2.Rel1-darwin-arm64-arm-none-eabi",
-              "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+              "version": "13.2.1-1.1",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v13.2.1-1.1/xpack-arm-none-eabi-gcc-13.2.1-1.1-darwin-arm64.tar.gz",
+              "sha256": "d4ce0de062420daab140161086ba017642365977e148d20f55a8807b1eacd703",
+              "strip_prefix": "xpack-arm-none-eabi-gcc-13.2.1-1.1",
               "exec_compatible_with": [
                 "@platforms//os:macos",
                 "@platforms//cpu:arm64"
               ]
             }
           },
-          "arm_none_eabi_linux_x86_64": {
+          "arm_none_eabi_darwin_x86_64": {
             "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
             "attributes": {
               "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
-              "sha256": "6cd1bbc1d9ae57312bcd169ae283153a9572bd6a8e4eeae2fedfbc33b115fdbb",
-              "strip_prefix": "arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi",
-              "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi.tar.xz",
+              "version": "13.2.1-1.1",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v13.2.1-1.1/xpack-arm-none-eabi-gcc-13.2.1-1.1-darwin-x64.tar.gz",
+              "sha256": "1ecc0fd6c31020aff702204f51459b4b00ff0d12b9cd95e832399881d819aa57",
+              "strip_prefix": "xpack-arm-none-eabi-gcc-13.2.1-1.1",
               "exec_compatible_with": [
-                "@platforms//os:linux",
+                "@platforms//os:macos",
                 "@platforms//cpu:x86_64"
               ]
             }
@@ -2878,13 +2864,27 @@
             "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
             "attributes": {
               "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
-              "sha256": "8fd8b4a0a8d44ab2e195ccfbeef42223dfb3ede29d80f14dcf2183c34b8d199a",
-              "strip_prefix": "arm-gnu-toolchain-13.2.Rel1-aarch64-arm-none-eabi",
-              "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-aarch64-arm-none-eabi.tar.xz",
+              "version": "13.2.1-1.1",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v13.2.1-1.1/xpack-arm-none-eabi-gcc-13.2.1-1.1-linux-arm64.tar.gz",
+              "sha256": "ab7f75d95ead0b1efb7432e7f034f9575cc3d23dc1b03d41af1ec253486d19de",
+              "strip_prefix": "xpack-arm-none-eabi-gcc-13.2.1-1.1",
               "exec_compatible_with": [
                 "@platforms//os:linux",
-                "@platforms//cpu:aarch64"
+                "@platforms//cpu:arm64"
+              ]
+            }
+          },
+          "arm_none_eabi_linux_x86_64": {
+            "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
+            "attributes": {
+              "toolchain_prefix": "arm-none-eabi",
+              "version": "13.2.1-1.1",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v13.2.1-1.1/xpack-arm-none-eabi-gcc-13.2.1-1.1-linux-x64.tar.gz",
+              "sha256": "1252a8cafe9237de27a765376697230368eec21db44dc3f1edeb8d838dabd530",
+              "strip_prefix": "xpack-arm-none-eabi-gcc-13.2.1-1.1",
+              "exec_compatible_with": [
+                "@platforms//os:linux",
+                "@platforms//cpu:x86_64"
               ]
             }
           },
@@ -2892,10 +2892,10 @@
             "repoRuleId": "@@toolchains_arm_gnu+//:deps.bzl%arm_gnu_cross_hosted_platform_specific_repo",
             "attributes": {
               "toolchain_prefix": "arm-none-eabi",
-              "version": "13.2.1",
-              "sha256": "51d933f00578aa28016c5e3c84f94403274ea7915539f8e56c13e2196437d18f",
-              "strip_prefix": "arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi",
-              "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-mingw-w64-i686-arm-none-eabi.zip",
+              "version": "13.2.1-1.1",
+              "url": "https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/download/v13.2.1-1.1/xpack-arm-none-eabi-gcc-13.2.1-1.1-win32-x64.zip",
+              "sha256": "56b18ccb0a50f536332ec5de57799342ff0cd005ca2c54288c74759b51929e4f",
+              "strip_prefix": "xpack-arm-none-eabi-gcc-13.2.1-1.1",
               "exec_compatible_with": [
                 "@platforms//os:windows",
                 "@platforms//cpu:x86_64"

@@ -44,7 +44,10 @@ arm_toolchain = use_extension(
     "@toolchains_arm_gnu//:extensions.bzl",
     "arm_toolchain",
 )
-arm_toolchain.arm_none_eabi(version = "13.2.1")
+
+# the xpack build of GCC 13.2.1, a `.tar.gz` that extracts faster than ARM's
+# `.tar.xz`
+arm_toolchain.arm_none_eabi(version = "13.2.1-1.1")
 use_repo(
     arm_toolchain,
     "arm_none_eabi",
