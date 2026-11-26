@@ -29,9 +29,10 @@ archive_override(
         # Bazel 9 removes @local_config_platform
         "sed -i.bak 's|@local_config_platform//:constraints.bzl|@platforms//host:constraints.bzl|' toolchain/templates/toolchain.bazel",
         "rm toolchain/templates/toolchain.bazel.bak",
-        # mark the toolchain archive repo as reproducible so Bazel can keep it
-        # in the repo contents cache
+        # mark the toolchain archive and hub repos as reproducible so Bazel can
+        # keep them in the repo contents cache
         "sed -i.bak 's|^        repository_ctx.patch(patch, strip = 1)$|&\\\n    return repository_ctx.repo_metadata(reproducible = True)|' deps.bzl",
+        "sed -i.bak 's|^toolchains_arm_gnu_repo = repository_rule($|    return repository_ctx.repo_metadata(reproducible = True)\\\n\\\n&|' deps.bzl",
         "rm deps.bzl.bak",
     ],
     strip_prefix = "toolchains_arm_gnu-{commit}".format(

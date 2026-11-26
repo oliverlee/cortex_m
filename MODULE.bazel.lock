@@ -724,7 +724,7 @@
     },
     "@@toolchains_arm_gnu+//:extensions.bzl%arm_toolchain": {
       "general": {
-        "bzlTransitiveDigest": "RFqSLE/rfo9MZ+0gS5HHgbe+UHsb616OG8NDLr6yc04=",
+        "bzlTransitiveDigest": "PJr6YG9yDzCmvhFK52vImEUIVFlv8QFJ7lBapQ/yUzo=",
         "usagesDigest": "2+oPXt+hqdICON7/mi5ii3X1euz4Dt9BzJTrFkbosp8=",
         "recordedInputs": [
           "REPO_MAPPING:rules_cc+,bazel_tools bazel_tools",
