@@ -1,9 +1,12 @@
+load("@apple_support//xcode:xcode_config.bzl", "xcode_config")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
 load("@local_workspace_directories//:defs.bzl", "BAZEL_WORKSPACE_ROOT")
 load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
 load("@rules_multirun//:defs.bzl", "command", "multirun")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+
+xcode_config(name = "host_xcodes")
 
 buildifier(
     name = "buildifier.check",

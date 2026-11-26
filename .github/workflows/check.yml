@@ -27,6 +27,7 @@ jobs:
         bazel_version:
           - pinned
           - 8.x
+          - 9.x
     runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4

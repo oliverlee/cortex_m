@@ -2,8 +2,6 @@ load("//rules:cc_test_runner_toolchain.bzl", "cc_test_runner_toolchain")
 load("//rules:gdb_qemu_runner.bzl", "gdb_qemu_runner")
 load("//rules:qemu_runner.bzl", "qemu_runner")
 
-xcode_config(name = "host_xcodes")
-
 filegroup(
     name = "format-config",
     srcs = [".clang-format"],

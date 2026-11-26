@@ -20,11 +20,16 @@ bazel_dep(
     version = "0.13.0",
 )
 
-TOOLCHAINS_ARM_GNU_COMMIT = "1abff3e6a5f894d0545654800ee0db6ea24a76a3"
+TOOLCHAINS_ARM_GNU_COMMIT = "6895733b87d3a75a40056b12c3d6628bc6945011"
 
 archive_override(
     module_name = "toolchains_arm_gnu",
-    integrity = "sha256-surv16TjyDtSebSX8fdj85TVnC8wGjIthEk3uHlKvFs=",
+    integrity = "sha256-QKl/PAnjE4O4IEKIwImJIT3ihjtWHPTY9h5FBg7yKFQ=",
+    patch_cmds = [
+        # Bazel 9 removes @local_config_platform
+        "sed -i.bak 's|@local_config_platform//:constraints.bzl|@platforms//host:constraints.bzl|' toolchain/templates/toolchain.bazel",
+        "rm toolchain/templates/toolchain.bazel.bak",
+    ],
     strip_prefix = "toolchains_arm_gnu-{commit}".format(
         commit = TOOLCHAINS_ARM_GNU_COMMIT,
     ),
@@ -70,6 +75,11 @@ use_repo(
     "local_workspace_directories",
 )
 
+bazel_dep(
+    name = "apple_support",
+    version = "2.12.0",
+    dev_dependency = True,
+)
 bazel_dep(
     name = "toolchains_llvm",
     dev_dependency = True,
