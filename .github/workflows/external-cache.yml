@@ -41,6 +41,7 @@ jobs:
       - uses: ./.github/actions/ci-env-setup
         with:
           buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+          cachix-auth-token: ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
 
       - name: fetch external deps
         run: |

@@ -42,6 +42,7 @@ jobs:
     - uses: ./.github/actions/ci-env-setup
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+        cachix-auth-token: ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - env:
         USE_BAZEL_VERSION: ${{ matrix.bazel_version }}
       run: |
@@ -71,6 +72,7 @@ jobs:
     - uses: ./.github/actions/ci-env-setup
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+        cachix-auth-token: ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - run: |
         bazelisk test \
           --compilation_mode=${{ matrix.compilation_mode }} \
@@ -83,6 +85,7 @@ jobs:
     - uses: ./.github/actions/ci-env-setup
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+        cachix-auth-token: ${{ github.event_name != 'pull_request' && secrets.CACHIX_AUTH_TOKEN || '' }}
     - run: |
         bazelisk run //tools:format.check
 
