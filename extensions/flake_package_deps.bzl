@@ -64,8 +64,8 @@ native_binary(
 def _provide_binary(pkgs):
     _flake_copy(
         name = "flake_copy",
-        flake_file = "//extensions:flake.nix",
-        flake_lock_file = "//extensions:flake.lock",
+        flake_file = "//tools:nix/flake.nix",
+        flake_lock_file = "//tools:nix/flake.lock",
     )
 
     for package in pkgs:

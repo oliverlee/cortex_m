@@ -6,6 +6,16 @@ common:macos --xcode_version_config=//tools:host_xcodes
 # skip Xcode autoconfiguration for the C++ toolchain `apple_support` registers
 common:macos --repo_env="BAZEL_NO_APPLE_CPP_TOOLCHAIN=1"
 
+# tools/bazel sets PATH and LD_LIBRARY_PATH to Nix tools and libraries. Pass them
+# to actions and tests explicitly instead of relying on the default of
+# --incompatible_strict_action_env.
+common --incompatible_strict_action_env=false
+common --action_env=PATH
+common --action_env=LD_LIBRARY_PATH
+common --host_action_env=PATH
+common --host_action_env=LD_LIBRARY_PATH
+common --test_env=PATH
+
 common --action_env="BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1"
 common --announce_rc
 common --color=yes

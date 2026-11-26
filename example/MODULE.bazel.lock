@@ -144,7 +144,7 @@
   "moduleExtensions": {
     "@@cortex_m+//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "4Ztf5eaPPPnqD0UEQf7dqAW9RpNJRSLDuI0TKIVNEsU=",
+        "bzlTransitiveDigest": "loyDfUXZdy9i9gOK0PyYxBHI7Ve8WlEa/Gyu65I1lv0=",
         "usagesDigest": "NBO1GlPzY5bjWCo0LO0EzR3BAY004m157ZYu/eeNkNk=",
         "recordedInputs": [
           "REPO_MAPPING:cortex_m+,rules_nixpkgs_core rules_nixpkgs_core+",
@@ -154,8 +154,8 @@
           "flake_copy": {
             "repoRuleId": "@@cortex_m+//extensions:flake_package_deps.bzl%_flake_copy",
             "attributes": {
-              "flake_file": "@@cortex_m+//extensions:flake.nix",
-              "flake_lock_file": "@@cortex_m+//extensions:flake.lock"
+              "flake_file": "@@cortex_m+//tools:nix/flake.nix",
+              "flake_lock_file": "@@cortex_m+//tools:nix/flake.lock"
             }
           },
           "diff": {

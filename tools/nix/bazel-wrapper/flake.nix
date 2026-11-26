@@ -2,7 +2,7 @@
   description = "flake defining files needed to bootstrap bazelisk";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
   };
 
   outputs =
