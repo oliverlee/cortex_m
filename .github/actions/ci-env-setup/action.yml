@@ -32,7 +32,8 @@ runs:
         cp .github/workflows/ci.bazelrc ~/.bazelrc
         rw_api_key="${{ inputs.buildbuddy-api-key }}"
         if [[ -n "$rw_api_key" ]]; then
-          echo "build:remote-cache --remote_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
+          echo "common:remote-cache --remote_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
+          echo "common:remote-cache --bes_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
         fi
 
     - name: setup bazel vendored external deps

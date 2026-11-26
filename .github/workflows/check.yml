@@ -20,15 +20,23 @@ jobs:
           - ubuntu-latest
           - ubuntu-24.04-arm
           - macos-latest
+        bazel_version:
+          - pinned
+          - 8.x
     runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/ci-env-setup
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
-    - run: |
+    - env:
+        USE_BAZEL_VERSION: ${{ matrix.bazel_version }}
+      run: |
+        if [[ "$USE_BAZEL_VERSION" == pinned ]]; then
+          source .bazeliskrc
+        fi
         cd example
-        bazel build \
+        bazelisk build \
           --compilation_mode=${{ matrix.compilation_mode }} \
           //...
 
@@ -50,7 +58,7 @@ jobs:
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
     - run: |
-        bazel test \
+        bazelisk test \
           --compilation_mode=${{ matrix.compilation_mode }} \
           //...
 
@@ -62,7 +70,7 @@ jobs:
       with:
         buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
     - run: |
-        bazel run //tools:format.check
+        bazelisk run //tools:format.check
 
   # https://emmer.dev/blog/skippable-github-status-checks-aren-t-really-required/
   # https://github.com/marketplace/actions/alls-green

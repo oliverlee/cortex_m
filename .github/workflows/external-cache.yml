@@ -44,7 +44,7 @@ jobs:
 
       - name: fetch external deps
         run: |
-          bazel vendor \
+          bazelisk vendor \
             --vendor_dir=~/bazel_external_deps \
             --curses=yes \
             //...
