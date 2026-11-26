@@ -272,7 +272,7 @@
   "moduleExtensions": {
     "//extensions:flake_package_deps.bzl%flake_package_deps": {
       "general": {
-        "bzlTransitiveDigest": "loyDfUXZdy9i9gOK0PyYxBHI7Ve8WlEa/Gyu65I1lv0=",
+        "bzlTransitiveDigest": "x+X3BRsTwnyUcOXKxGpOC/4Gu8rzY+xYhc0Uz827G2g=",
         "usagesDigest": "mK4YgaAu5b/qaOsvCSv9KZ6YWfBZ1+idETueZeq0Zgw=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_nixpkgs_core rules_nixpkgs_core+",
@@ -282,8 +282,8 @@
           "flake_copy": {
             "repoRuleId": "@@//extensions:flake_package_deps.bzl%_flake_copy",
             "attributes": {
-              "flake_file": "@@//tools:nix/flake.nix",
-              "flake_lock_file": "@@//tools:nix/flake.lock"
+              "flake_file": "@@//tools/nix:flake.nix",
+              "flake_lock_file": "@@//tools/nix:flake.lock"
             }
           },
           "diff": {
@@ -354,7 +354,7 @@
     },
     "//extensions:flake_package_deps.bzl%flake_package_dev_deps": {
       "general": {
-        "bzlTransitiveDigest": "loyDfUXZdy9i9gOK0PyYxBHI7Ve8WlEa/Gyu65I1lv0=",
+        "bzlTransitiveDigest": "x+X3BRsTwnyUcOXKxGpOC/4Gu8rzY+xYhc0Uz827G2g=",
         "usagesDigest": "3VqgbgIsoCYcZdgEvE1x0SA7ofzQrz1Y3WawnvC6qfA=",
         "recordedInputs": [
           "REPO_MAPPING:,rules_nixpkgs_core rules_nixpkgs_core+",
@@ -364,8 +364,8 @@
           "flake_copy": {
             "repoRuleId": "@@//extensions:flake_package_deps.bzl%_flake_copy",
             "attributes": {
-              "flake_file": "@@//tools:nix/flake.nix",
-              "flake_lock_file": "@@//tools:nix/flake.lock"
+              "flake_file": "@@//tools/nix:flake.nix",
+              "flake_lock_file": "@@//tools/nix:flake.lock"
             }
           },
           "glibc": {

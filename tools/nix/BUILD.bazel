@@ -1,0 +1,50 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+genrule(
+    name = "gen-pins",
+    srcs = [
+        "bazel-wrapper/flake.lock",
+        "bazel-wrapper/flake.nix",
+    ],
+    outs = ["pins.generated.json"],
+    cmd = """
+nix_dir="$$(realpath "$$(mktemp -d)")"
+cp -L --parents $(SRCS) "$$nix_dir"
+
+XDG_CACHE_HOME="$$(mktemp -d)" \
+nix --extra-experimental-features 'nix-command flakes' \
+  eval --impure --json --pretty \
+  --file $(execpath generate-pins.nix) \
+  --apply "f: f { nixDir = toString $$nix_dir/tools/nix; }" \
+  > $@
+""",
+    tags = [
+        "manual",
+        "no-remote-exec",
+        "requires-network",
+    ],
+    tools = [
+        "generate-pins.nix",
+        "pins.nix",
+    ],
+)
+
+sh_test(
+    name = "pins_test",
+    srcs = ["pins_test.bash"],
+    data = [
+        "pins.json",
+        ":pins.generated.json",
+        "@diff",
+    ],
+    env = {"DIFF": "$(rootpath @diff)"},
+    tags = ["manual"],
+)
+
+sh_binary(
+    name = "pins.update",
+    srcs = ["update.bash"],
+    data = [":pins.generated.json"],
+    tags = ["manual"],
+)

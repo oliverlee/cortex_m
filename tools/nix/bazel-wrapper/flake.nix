@@ -42,12 +42,11 @@
             ++ lib.optionals stdenv.isDarwin [
               darwin.cctools
             ];
-          rc_line = ''
-            common --shell_executable ${pkgs.lib.getExe pkgs.bash}
-          '';
         in
         {
-          nixos-bazelrc = pkgs.writeText "nixos-${system}.bazelrc" "${rc_line}";
+          host-bazelrc = pkgs.writeText "host-${system}.bazelrc" ''
+            common --shell_executable ${pkgs.lib.getExe pkgs.bash}
+          '';
 
           default = pkgs.writeShellApplication {
             name = "bazel-wrapper";

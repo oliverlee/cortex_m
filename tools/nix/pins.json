@@ -1,0 +1,19 @@
+{
+  "bazel-wrapper": {
+    "hash": "0755c521d3bbfb79b3b9eaba809cafdeae7b12f5",
+    "paths": {
+      "aarch64-darwin": {
+        "default": "/nix/store/fpzc8vyb3vqa0p7hfk2yjsrvhavfamqb-bazel-wrapper",
+        "host-bazelrc": "/nix/store/zq0s5j05ldn0shlvmcqdsp98q6x5pjxb-host-aarch64-darwin.bazelrc"
+      },
+      "aarch64-linux": {
+        "default": "/nix/store/h9z3s4gvmjzdmn04v54962pqi7g6zmy0-bazel-wrapper",
+        "host-bazelrc": "/nix/store/1v5h0xhnvd2s95hybbmgkk2gxnl9wcbd-host-aarch64-linux.bazelrc"
+      },
+      "x86_64-linux": {
+        "default": "/nix/store/598xikq363i22bv819a6r3nlabpz5vw2-bazel-wrapper",
+        "host-bazelrc": "/nix/store/44d36qdskz4rns2hmx0cf3vvn7mi7a46-host-x86_64-linux.bazelrc"
+      }
+    }
+  }
+}

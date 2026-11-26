@@ -89,6 +89,16 @@ jobs:
     - run: |
         bazelisk run //tools:format.check
 
+  bazel-wrapper-pins:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/ci-env-setup
+      with:
+        buildbuddy-api-key: ${{ secrets.BUILDBUDDY_API_KEY }}
+    - run: |
+        bazelisk test //tools/nix:pins_test
+
   # https://emmer.dev/blog/skippable-github-status-checks-aren-t-really-required/
   # https://github.com/marketplace/actions/alls-green
   all:
@@ -98,6 +108,7 @@ jobs:
       - examples
       - test
       - format
+      - bazel-wrapper-pins
     steps:
     - uses: Kesin11/actions-timeline@v2
     - uses: re-actors/alls-green@release/v1
