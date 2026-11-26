@@ -87,11 +87,11 @@ exit $(cat "$return")
                 transitive_files = depset(transitive = [
                     ctx.attr.qemu_runner.files,
                     ctx.attr._gdb.files,
-                    ctx.attr._runfiles.files,
                 ]),
             ).merge_all([
                 ctx.attr.qemu_runner[DefaultInfo].default_runfiles,
                 ctx.attr._gdb[DefaultInfo].default_runfiles,
+                ctx.attr._runfiles[DefaultInfo].default_runfiles,
             ]),
         ),
         RunEnvironmentInfo(
