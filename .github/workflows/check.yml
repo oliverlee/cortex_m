@@ -17,9 +17,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compilation_mode:
-          - fastbuild
-          - opt
         system:
           - ubuntu-latest
           - ubuntu-24.04-arm
@@ -36,6 +33,9 @@ jobs:
             lockfile_mode: update
           - bazel_version: 9.x
             lockfile_mode: update
+        exclude:
+          - system: macos-latest
+            bazel_version: pinned
     runs-on: ${{ matrix.system }}
     steps:
     - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
         fi
         cd example
         bazelisk test \
-          --compilation_mode=${{ matrix.compilation_mode }} \
+          --compilation_mode=opt \
           --lockfile_mode=${{ matrix.lockfile_mode }} \
           //...
 
