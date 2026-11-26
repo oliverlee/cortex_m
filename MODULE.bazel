@@ -59,6 +59,7 @@ use_repo(
 
 register_toolchains(
     "//toolchain:lm3s6965evb_toolchain",
+    "//toolchain:lm3s6965evb_test_toolchain",
     "//:qemu_test_runner_toolchain",
 )
 
@@ -79,6 +80,7 @@ local_config = use_extension(
 )
 use_repo(
     local_config,
+    "local_bazel_version",
     "local_workspace_directories",
 )
 

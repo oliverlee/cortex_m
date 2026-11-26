@@ -1,6 +1,7 @@
 load("@arm_none_eabi//toolchain:toolchain.bzl", "arm_none_eabi_toolchain")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("//board:defs.bzl", "BOARDS")
+load(":default_test_toolchain.bzl", "default_test_toolchain")
 
 cc_library(
     name = "start_cortex-m3",
@@ -86,4 +87,12 @@ _warning_opts = [
         )
         for board in BOARDS
     ]
+]
+
+[
+    default_test_toolchain(
+        name = "{board}_test_toolchain".format(board = board.name),
+        target_compatible_with = ["//board:{board}".format(board = board.name)],
+    )
+    for board in BOARDS
 ]

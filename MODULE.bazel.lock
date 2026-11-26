@@ -408,12 +408,16 @@
     },
     "//extensions:local_config.bzl%local_config": {
       "general": {
-        "bzlTransitiveDigest": "lXiw0WnsaJrqtPUaefFb4dUnim/xnEUzixEl6Cbo/r0=",
+        "bzlTransitiveDigest": "gTmdxeuWM8K/DIXf2K99s4EEUnlhc3tsrhYO/orRsQ0=",
         "usagesDigest": "//saaosASCR2S0r2P/a3C5Har9fM6gThaFuzeNvozu0=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "local_workspace_directories": {
             "repoRuleId": "@@//extensions:local_config.bzl%_local_workspace_directories",
+            "attributes": {}
+          },
+          "local_bazel_version": {
+            "repoRuleId": "@@//extensions:local_config.bzl%_local_bazel_version",
             "attributes": {}
           }
         }

@@ -205,12 +205,16 @@
     },
     "@@cortex_m+//extensions:local_config.bzl%local_config": {
       "general": {
-        "bzlTransitiveDigest": "lXiw0WnsaJrqtPUaefFb4dUnim/xnEUzixEl6Cbo/r0=",
+        "bzlTransitiveDigest": "gTmdxeuWM8K/DIXf2K99s4EEUnlhc3tsrhYO/orRsQ0=",
         "usagesDigest": "9PKOl8ihwTcS7GlQe+bu+hMsnmLEfQg1OQKobJAolTc=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "local_workspace_directories": {
             "repoRuleId": "@@cortex_m+//extensions:local_config.bzl%_local_workspace_directories",
+            "attributes": {}
+          },
+          "local_bazel_version": {
+            "repoRuleId": "@@cortex_m+//extensions:local_config.bzl%_local_bazel_version",
             "attributes": {}
           }
         }

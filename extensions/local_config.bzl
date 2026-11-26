@@ -30,9 +30,37 @@ _local_workspace_directories = repository_rule(
     local = True,
 )
 
+def _local_bazel_version_impl(rctx):
+    rctx.file(
+        "BUILD.bazel",
+        content = """\
+exports_files(["defs.bzl"])
+""",
+        executable = False,
+    )
+
+    rctx.file(
+        "defs.bzl",
+        content = """
+BAZEL_VERSION = "{bazel_version}"
+""".format(
+            bazel_version = native.bazel_version,
+        ),
+        executable = False,
+    )
+
+_local_bazel_version = repository_rule(
+    implementation = _local_bazel_version_impl,
+    # Reruns on server restarts, which keeps the version current.
+    local = True,
+)
+
 def _local_config_impl(_mctx):
     _local_workspace_directories(
         name = "local_workspace_directories",
+    )
+    _local_bazel_version(
+        name = "local_bazel_version",
     )
 
 local_config = module_extension(
