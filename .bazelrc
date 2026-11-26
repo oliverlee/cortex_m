@@ -13,6 +13,7 @@ common --curses=yes
 common --ui_actions_shown=20
 common --progress_in_terminal_title
 common --enable_platform_specific_config
+common --lockfile_mode=error
 
 # keep reproducible repos, e.g. the LLVM toolchain, in the remote cache
 # startup options can't be set per config, so this applies to every build
