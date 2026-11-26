@@ -89,7 +89,7 @@ jobs:
     - run: |
         bazelisk run //tools:format.check
 
-  bazel-wrapper-pins:
+  nix-pins:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -108,7 +108,7 @@ jobs:
       - examples
       - test
       - format
-      - bazel-wrapper-pins
+      - nix-pins
     steps:
     - uses: Kesin11/actions-timeline@v2
     - uses: re-actors/alls-green@release/v1

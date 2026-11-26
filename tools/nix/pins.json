@@ -15,5 +15,36 @@
         "host-bazelrc": "/nix/store/44d36qdskz4rns2hmx0cf3vvn7mi7a46-host-x86_64-linux.bazelrc"
       }
     }
+  },
+  "packages": {
+    "hash": "5a168b0ea4bef416d1a4f73ba3f9f3e8d13f8fbd",
+    "paths": {
+      "aarch64-darwin": {
+        "diff": "/nix/store/mnyxxp6qsgavv4413fx6rg7jvqygk8q5-diffutils-3.12",
+        "gdb": "/nix/store/k1faaw89y5r1pp7slr938l0py7lsv5l1-gdb-17.2",
+        "nixd": "/nix/store/562m7np6pzm7a0353q7pnly2kryqmw1v-nixd-2.9.1",
+        "nixfmt": "/nix/store/w9y04hc8a189f1hnidwnwi97frv1j3nx-nixfmt-1.5.0",
+        "nixfmt-tree": "/nix/store/yslq1mybph72vsm20az4kzbgakh87gqf-nixfmt-tree-2.6.0",
+        "qemu-system-arm": "/nix/store/ynq8pcnf1jrbl80awv71yk05khi03zss-qemu-10.2.4"
+      },
+      "aarch64-linux": {
+        "diff": "/nix/store/4pgvcqkkimlhv6p9vhnarjkr9rhrxpvn-diffutils-3.12",
+        "gdb": "/nix/store/f299b4gv6aa5dvrz5s5lwi1jc057risi-gdb-17.2",
+        "glibc": "/nix/store/32h2kh9i72z3zdsray6aix9im508xfhw-sysroot",
+        "nixd": "/nix/store/0qksdw69w1xiaaydy4bzh7fn3vk6nrlg-nixd-2.9.1",
+        "nixfmt": "/nix/store/bl2x9d14vz80j6la8xgw2pli8k850glb-nixfmt-1.5.0",
+        "nixfmt-tree": "/nix/store/7qliw7gi0m23hgn62sgi7dqd6yagiiwq-nixfmt-tree-2.6.0",
+        "qemu-system-arm": "/nix/store/fw0yly47wrzaxqz8n4vdnpv7qr2kf3l4-qemu-10.2.4"
+      },
+      "x86_64-linux": {
+        "diff": "/nix/store/82v57x7crgk014ikixd9p0v3rxg1ixkn-diffutils-3.12",
+        "gdb": "/nix/store/9ialwy63g1si1l2pxzvr96ngh4fwy4rm-gdb-17.2",
+        "glibc": "/nix/store/2lwxzn1lsl9ddfxj9xa7qnqj0lcn2l8j-sysroot",
+        "nixd": "/nix/store/rifr0as0h4b8qwvd5g6680vb2p0phzck-nixd-2.9.1",
+        "nixfmt": "/nix/store/y7dzw78kc9rcr53j9zzsjw3imljn4ax4-nixfmt-1.5.0",
+        "nixfmt-tree": "/nix/store/0ys1nqvikwbw82pzcsrcyic3y7hzm14i-nixfmt-tree-2.6.0",
+        "qemu-system-arm": "/nix/store/3s14rr8srvg6ilbczdfj7w269cyp31ns-qemu-10.2.4"
+      }
+    }
   }
 }

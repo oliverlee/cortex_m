@@ -1,7 +1,7 @@
-# The store path of each output of the bazel-wrapper flake for each system, and
-# a hash of the flake that consumers compare to detect stale pins.
+# The store path of each flake output for each system, and a hash of each flake
+# that consumers compare to detect stale pins.
 {
-  # A directory with the bazel-wrapper flake.
+  # A directory with tools/nix/flake.nix and the bazel-wrapper flake.
   nixDir,
 }:
 let
@@ -19,4 +19,5 @@ let
 in
 {
   bazel-wrapper = pins "${nixDir}/bazel-wrapper";
+  packages = pins nixDir;
 }
