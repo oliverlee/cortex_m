@@ -49,7 +49,7 @@ jobs:
           source .bazeliskrc
         fi
         cd example
-        bazelisk build \
+        bazelisk test \
           --compilation_mode=${{ matrix.compilation_mode }} \
           --lockfile_mode=${{ matrix.lockfile_mode }} \
           //...
