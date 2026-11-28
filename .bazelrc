@@ -42,5 +42,5 @@ test --test_output=errors
 test --test_summary=detailed
 test --test_verbose_timeout_warnings
 
-try-import %workspace%/.nixos-autoconfig/bazelrc
+import %workspace%/.bazel-wrapper/bazelrc
 try-import %workspace%/user.bazelrc

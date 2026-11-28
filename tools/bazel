@@ -8,14 +8,19 @@ set -euo pipefail
 # on Nix packages to provide binaries, this list rarely changes, and does not
 # depend on any other files -- we can "cache" the derivation by hashing the
 # tools/nix/bazel-wrapper directory.
+#
+# Evaluating the flake requires the nixpkgs source, which can take a minute to
+# fetch. tools/nix/pins.json lists the store path of each flake output for
+# each system. This script fetches those paths from a binary cache and evaluates
+# the flake only when the pins are stale or a path isn't cached.
 
-workspace_root="${BASH_SOURCE[0]%/tools/bazel}"
+workspace_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 bazel_wrapper="${workspace_root}/tools/nix/bazel-wrapper"
 
 # this is much faster than using 'nix hash'
 bazel_wrapper_hash=$(cat "${bazel_wrapper}"/* | sha1sum | cut -d' ' -f1)
 
-hashed_out_link="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
+hashed_dir="${workspace_root}/.bazel-wrapper/${bazel_wrapper_hash}"
 
 function nix_build
 {
@@ -30,30 +35,61 @@ function nix_build
     "$@"
 }
 
-if [[ ! -e "$hashed_out_link" ]]; then
-  rm -rf "${workspace_root}/.bazel-wrapper"
+# Prints the pinned store path of flake output $1 for this system. Fails if the
+# pins don't match the flake or don't list the output.
+function pinned_path
+{
+  nix \
+    --extra-experimental-features nix-command \
+    eval \
+    --impure \
+    --raw \
+    --expr "
+      (import ${workspace_root}/tools/nix/pins.nix).path {
+        pinsFile = \"${workspace_root}/tools/nix/pins.json\";
+        group = \"bazel-wrapper\";
+        dir = \"${bazel_wrapper}\";
+        output = \"$1\";
+      }"
+}
+
+# fetches flake output $1 to out link $2, building it if it can't be fetched
+function realise
+{
+  local output=$1
+  local out_link=$2
+  local store_path
+
+  if store_path=$(pinned_path "$output") &&
+    nix_build --out-link "$out_link" "$store_path"; then
+    echo "fetched store path $store_path to $out_link" >&2
+    return
+  fi
+  echo "building $output from ${bazel_wrapper}" >&2
+
   store_path=$(
     nix_build \
-      --out-link "$hashed_out_link" \
+      --out-link "$out_link" \
       --print-out-paths \
-      "path:$bazel_wrapper"
+      "path:${bazel_wrapper}#${output}"
   )
-  echo "cached store path $store_path to $hashed_out_link"
-fi
+  echo "built store path $store_path to $out_link" >&2
+}
 
-# NixOS doesn't have /bin/bash so we need to set --shell_executable
-nixos_bazelrc_dir="${workspace_root}/.nixos-autoconfig"
-if [[ ! -e /bin/bash && ! -e "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" ]]; then
-  echo "generating/updating nixos specific bazelrc"
+if [[ ! -e "${hashed_dir}/bazel-wrapper" ||
+  ! -e "${hashed_dir}/host-autoconfig.bazelrc" ||
+  ! -e "${workspace_root}/.bazel-wrapper/bazelrc" ]]; then
+  rm -rf "${workspace_root}/.bazel-wrapper"
+  mkdir -p "$hashed_dir"
 
-  rm -rf "$nixos_bazelrc_dir"
-  nix_build \
-    --out-link "${nixos_bazelrc_dir}/${bazel_wrapper_hash}" \
-    "path:${bazel_wrapper}#nixos-bazelrc"
-  cat > ${nixos_bazelrc_dir}/bazelrc << EOF
-import %workspace%/.nixos-autoconfig/${bazel_wrapper_hash}
+  realise default "${hashed_dir}/bazel-wrapper"
+
+  # set --shell_executable to bash from Nix instead of relying on /bin/bash,
+  # which NixOS doesn't have
+  realise host-bazelrc "${hashed_dir}/host-autoconfig.bazelrc"
+  cat > "${workspace_root}/.bazel-wrapper/bazelrc" << EOF
+import %workspace%/.bazel-wrapper/${bazel_wrapper_hash}/host-autoconfig.bazelrc
 EOF
-
 fi
 
-exec "$hashed_out_link/bin/bazel-wrapper" "$@"
+exec "${hashed_dir}/bazel-wrapper/bin/bazel-wrapper" "$@"
