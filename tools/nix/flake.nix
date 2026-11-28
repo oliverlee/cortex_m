@@ -2,13 +2,17 @@
   description = "flake containing packages used by repo extensions";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    # tools/bazel evaluates the bazel-wrapper flake on its own. The
+    # bazel-wrapper flake owns the nixpkgs pin.
+    bazel-wrapper.url = "path:./bazel-wrapper";
+    nixpkgs.follows = "bazel-wrapper/nixpkgs";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      ...
     }:
     let
       systems = [
@@ -28,10 +32,9 @@
           inherit (pkgs)
             gdb
             nixd
+            nixfmt
             nixfmt-tree
             ;
-
-          nixfmt = pkgs.nixfmt-rfc-style;
 
           diff = pkgs.diffutils;
 
