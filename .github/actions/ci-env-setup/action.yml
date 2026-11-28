@@ -2,7 +2,6 @@ name: "CI environment setup"
 description: |
   * set home bazelrc for CI runner
   * set buildbuddy api key
-  * restore nix store
   * use and push to Cachix cache
 
 inputs:
@@ -14,10 +13,6 @@ inputs:
     default: ""
     description: |
       Cachix auth token to push to the cache. If empty, the cache is read only.
-  external-cache-key:
-    default: ${{ runner.arch }}_${{ runner.os }}-default
-    description: |
-      Key specifying which cache to restore.
 
 runs:
   using: "composite"
@@ -40,16 +35,6 @@ runs:
           echo "common:remote-cache --remote_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
           echo "common:remote-cache --bes_header=x-buildbuddy-api-key=$rw_api_key" >> ~/.bazelrc
         fi
-
-    - name: restore nix store
-      uses: nix-community/cache-nix-action/restore@v6
-      with:
-        paths: |
-          /nix
-          ~/.cache/nix
-          ~root/.cache/nix
-        primary-key: nix-store-${{ inputs.external-cache-key }}
-        save: false
 
     - uses: cachix/cachix-action@v15
       with:
