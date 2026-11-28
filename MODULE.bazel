@@ -15,10 +15,6 @@ bazel_dep(
     name = "platforms",
     version = "1.0.0",
 )
-bazel_dep(
-    name = "rules_nixpkgs_core",
-    version = "0.13.0",
-)
 
 TOOLCHAINS_ARM_GNU_COMMIT = "6895733b87d3a75a40056b12c3d6628bc6945011"
 

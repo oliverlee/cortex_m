@@ -6,6 +6,8 @@ genrule(
     srcs = [
         "bazel-wrapper/flake.lock",
         "bazel-wrapper/flake.nix",
+        "flake.lock",
+        "flake.nix",
     ],
     outs = ["pins.generated.json"],
     cmd = """

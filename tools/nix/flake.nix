@@ -42,7 +42,8 @@
             hostCpuTargets = [ "arm-softmmu" ];
             minimal = true;
           };
-
+        }
+        // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
           glibc =
             let
               sysroot-base = pkgs.symlinkJoin {
