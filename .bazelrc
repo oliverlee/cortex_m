@@ -27,6 +27,11 @@ common --lockfile_mode=error
 
 import %workspace%/tools/remote-cache.bazelrc
 
+# rules_swift, which Bazel 9 adds to the module graph, registers a toolchain
+# from this repo. Its rule runs `swiftc` probes (about 10s on macOS) if
+# `swiftc` is on the PATH. Nothing here builds Swift.
+common --override_repository=rules_swift++non_module_deps+build_bazel_rules_swift_local_config=%workspace%/tools/rules_swift_local_config
+
 common --@rules_python//python/config_settings:bootstrap_impl=script
 common --experimental_repository_cache_hardlinks
 

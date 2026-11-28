@@ -1,1 +1,4 @@
 import %workspace%/../tools/remote-cache.bazelrc
+
+# see the root .bazelrc
+common --override_repository=rules_swift++non_module_deps+build_bazel_rules_swift_local_config=%workspace%/tools/rules_swift_local_config
